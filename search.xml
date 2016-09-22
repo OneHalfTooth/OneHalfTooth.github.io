@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+    
+    <entry>
+      <title><![CDATA[runtime之NSArray、NSDictionary安全(一)]]></title>
+      <url>http://yoursite.com/2015/09/22/runtime%E4%B9%8BNSArray%E3%80%81NSDictionary%E5%AE%89%E5%85%A8/</url>
+      <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>看了<a href="http://www.cnblogs.com/muyushifang07/p/5737564.html" target="_blank" rel="external"><strong>沐雨十方07</strong></a>的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。</p>
+<p>众所周知，在apple的淫威下NSArray,NSDictionary,NSMutableArray,NSMutableDictionary是不不能出现有关nil的操作,一旦操作就会出现<strong>crash</strong>的后果,如果我们要避免这种<strong>crash</strong>那么就要增加许多if,现在我们来利用runtime彻底解决这个问题.<br><br><br><a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">demo地址 : https://github.com/OneHalfTooth/Runtime_Safe</a></p>
+<p><strong>首先我们可能用到几个函数</strong>（需要包含<font color="red">运行时库</font>）<br><br> <font color="red">class_getInstanceMethod(Class cls, SEL name):得到类的实例方法</font></p>
+  <font color="red">class_getClassMethod(Class cls, SEL name):得到类的类方法</font>
+
+<p>  <font color="red"> method_exchangeImplementations(Method m1, Method m2) : 交换方法m1 和方法m2的实现</font></p>
+<h2 id="1、runtime之NSArray安全"><a href="#1、runtime之NSArray安全" class="headerlink" title="1、runtime之NSArray安全"></a>1、runtime之NSArray安全</h2><p>码代码的过程中我们一不小心可能就会出现类似于这种情况</p>
+<pre><code>NSArray * temp = @[@&quot;0&quot;,@&quot;1&quot;,@&quot;2&quot;];
+NSString * str = [temp objectAtIndex:4];
+</code></pre><p>后果就是<strong>crash</strong><br><br>但是我们发现大牛们写代码的时候通常<strong>很少出现对数组越界</strong>的异常处理情况,到底是什么原因呢，其实我也不知道😝<br><br>而我是使用runtime的黑魔法来解决这种情况的,请看源码<br></p>
+<pre><code>- (id)custmeObjectAtIndex:(NSInteger)index{
+if (index &gt;= self.count) {
+    return nil;
+}
+//或许你对这里有个疑问，稍后解答
+return [self custmeObjectAtIndex:index];
+}
+</code></pre><p>首先我声明一个方法,因为我要用黑魔法<font color="red">（Method Swizzling）</font>将系统的<strong>objectAtIndex:</strong>方法实现给替换掉,这样做的目的是在<strong>NSArray调用objectAtIndex:</strong>方法的时候，首先调用<strong>(custmeObjectAtIndex:)</strong>本人定义好的方法,然后在custmeObjectAtIndex:这个方法中去判断参数合法性，再做下一步打算.<br><br>然后我们开始使用<font color="red">（Method Swizzling）</font>将系统<strong>objectAtIndex:</strong>的实现和<strong>(custmeObjectAtIndex:)</strong>的实现进行交换</p>
+<pre><code>//NSArray 在编译的时候名字并不是NSarray而是__NSArray0
+Class arrayM = NSClassFromString(@&quot;__NSArray0&quot;);
+
+//获取到系统objectAtIndex:
+Method objectAtIndex = class_getInstanceMethod(arrayM, @selector(objectAtIndex:));
+
+//获取自定义的custmeObjectAtIndex:
+Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeObjectAtIndex:));
+
+//交换两个方法的实现
+method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
+</code></pre><p>至此,我们常见的数组越界crash已经被解决了,但是你是不是已经蒙圈了😁,为什么在<strong>- (id)custmeObjectAtIndex:(NSInteger)index</strong>方法中出现了 <strong>[self custmeObjectAtIndex:index];</strong>自己调用自己这种情况呢,前边我已经说了是交换两个方法的实现,所以说两个方法的内容<strong>(简单的说就是方法里边的代码)</strong>已经被交换,所以[self custmeObjectAtIndex:index]这句代码调用的系统objectAtIndex:的实现，所以并不是自己调用自己</p>
+]]></content>
+    </entry>
+    
+  
+  
+</search>
