@@ -140,7 +140,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/22/runtime之NSArray、NSDictionary安全/">runtime之NSArray、NSDictionary安全</a>
+      <a class="article-title" href="/2015/09/22/runtime之NSArray、NSDictionary安全/">runtime之NSArray、NSDictionary安全(一)</a>
     </h1>
   
 
@@ -150,6 +150,10 @@
       
         <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>看了<a href="http://www.cnblogs.com/muyushifang07/p/5737564.html" target="_blank" rel="external"><strong>沐雨十方07</strong></a>的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。</p>
 <p>众所周知，在apple的淫威下NSArray,NSDictionary,NSMutableArray,NSMutableDictionary是不不能出现有关nil的操作,一旦操作就会出现<strong>crash</strong>的后果,如果我们要避免这种<strong>crash</strong>那么就要增加许多if,现在我们来利用runtime彻底解决这个问题.<br><br><br><a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">demo地址 : https://github.com/OneHalfTooth/Runtime_Safe</a></p>
+<p><strong>首先我们可能用到几个函数</strong>（需要包含<font color="red">运行时库</font>）<br><br> <font color="red">class_getInstanceMethod(Class cls, SEL name):得到类的实例方法</font></p>
+  <font color="red">class_getClassMethod(Class cls, SEL name):得到类的类方法</font>
+
+<p>  <font color="red"> method_exchangeImplementations(Method m1, Method m2) : 交换方法m1 和方法m2的实现</font></p>
 <h2 id="1、runtime之NSArray安全"><a href="#1、runtime之NSArray安全" class="headerlink" title="1、runtime之NSArray安全"></a>1、runtime之NSArray安全</h2><p>码代码的过程中我们一不小心可能就会出现类似于这种情况</p>
 <pre><code>NSArray * temp = @[@&quot;0&quot;,@&quot;1&quot;,@&quot;2&quot;];
 NSString * str = [temp objectAtIndex:4];
@@ -185,7 +189,7 @@ method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/字典-数组-崩溃-安全-运行时-runtime/">字典,数组,崩溃,安全,运行时,runtime</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/字典-数组-崩溃-安全-运行时-runtime-NSArray插入nil崩溃、NSDictionary插入nil崩溃/">字典,数组,崩溃,安全,运行时,runtime,NSArray插入nil崩溃、NSDictionary插入nil崩溃</a></li></ul>
 	</div>
 
       
@@ -289,7 +293,7 @@ MathJax.Hub.Queue(function() {
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/字典-数组-崩溃-安全-运行时-runtime/" style="font-size: 10px;">字典,数组,崩溃,安全,运行时,runtime</a>
+    				<a href="/tags/字典-数组-崩溃-安全-运行时-runtime-NSArray插入nil崩溃、NSDictionary插入nil崩溃/" style="font-size: 10px;">字典,数组,崩溃,安全,运行时,runtime,NSArray插入nil崩溃、NSDictionary插入nil崩溃</a>
     			</div>
     	</section>
     
