@@ -140,7 +140,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/22/runtime之NSArray、NSDictionary安全/">runtime之NSArray、NSDictionary安全(一)</a>
+      <a class="article-title" href="/2016/01/22/runtime之NSArray、NSDictionary安全/">runtime之NSArray安全</a>
     </h1>
   
 
@@ -154,7 +154,7 @@
   <font color="red">class_getClassMethod(Class cls, SEL name):得到类的类方法</font>
 
 <p>  <font color="red"> method_exchangeImplementations(Method m1, Method m2) : 交换方法m1 和方法m2的实现</font></p>
-<h2 id="1、runtime之NSArray安全"><a href="#1、runtime之NSArray安全" class="headerlink" title="1、runtime之NSArray安全"></a>1、runtime之NSArray安全</h2><p>码代码的过程中我们一不小心可能就会出现类似于这种情况</p>
+<h2 id="runtime之NSArray的nil操作"><a href="#runtime之NSArray的nil操作" class="headerlink" title="runtime之NSArray的nil操作"></a>runtime之NSArray的nil操作</h2><p>码代码的过程中我们一不小心可能就会出现类似于这种情况</p>
 <pre><code>NSArray * temp = @[@&quot;0&quot;,@&quot;1&quot;,@&quot;2&quot;];
 NSString * str = [temp objectAtIndex:4];
 </code></pre><p>后果就是<strong>crash</strong><br><br>但是我们发现大牛们写代码的时候通常<strong>很少出现对数组越界</strong>的异常处理情况,到底是什么原因呢，其实我也不知道😝<br><br>而我是使用runtime的黑魔法来解决这种情况的,请看源码<br></p>
@@ -178,13 +178,14 @@ Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeOb
 //交换两个方法的实现
 method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
 </code></pre><p>至此,我们常见的数组越界crash已经被解决了,但是你是不是已经蒙圈了😁,为什么在<strong>- (id)custmeObjectAtIndex:(NSInteger)index</strong>方法中出现了 <strong>[self custmeObjectAtIndex:index];</strong>自己调用自己这种情况呢,前边我已经说了是交换两个方法的实现,所以说两个方法的内容<strong>(简单的说就是方法里边的代码)</strong>已经被交换,所以[self custmeObjectAtIndex:index]这句代码调用的系统objectAtIndex:的实现，所以并不是自己调用自己</p>
+<p><strong>至此一个关于NSArray的runtime已经结束,更多请<a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">查看demo</a></strong></p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2015/09/22/runtime之NSArray、NSDictionary安全/" class="archive-article-date">
-  	<time datetime="2015-09-22T02:48:14.000Z" itemprop="datePublished"><i class="icon-clock"></i>2015-09-22</time>
+      <a href="/2016/01/22/runtime之NSArray、NSDictionary安全/" class="archive-article-date">
+  	<time datetime="2016-01-22T02:48:14.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-01-22</time>
 </a>
       
 	<div class="article-tag tagcloud">

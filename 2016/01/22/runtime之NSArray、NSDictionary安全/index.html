@@ -4,17 +4,21 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Archives | 马扬的博客</title>
+  <title>runtime之NSArray安全 | 马扬的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一个年轻的程序员">
-<meta property="og:type" content="website">
-<meta property="og:title" content="马扬的博客">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="背景看了沐雨十方07的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。
+众所周知，在apple的淫威下NSArray,NSDictionary,NSMutableArray,NSMutableDictionary是不不能出现有关nil的操作,一旦操作就会出现crash的后果,如果我们要避免这种crash那么就要增加许多if,现在我们来利用runtime彻底解决这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="runtime之NSArray安全">
+<meta property="og:url" content="http://yoursite.com/2016/01/22/runtime之NSArray、NSDictionary安全/index.html">
 <meta property="og:site_name" content="马扬的博客">
-<meta property="og:description" content="一个年轻的程序员">
+<meta property="og:description" content="背景看了沐雨十方07的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。
+众所周知，在apple的淫威下NSArray,NSDictionary,NSMutableArray,NSMutableDictionary是不不能出现有关nil的操作,一旦操作就会出现crash的后果,如果我们要避免这种crash那么就要增加许多if,现在我们来利用runtime彻底解决这">
+<meta property="og:updated_time" content="2016-09-22T09:18:03.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="马扬的博客">
-<meta name="twitter:description" content="一个年轻的程序员">
+<meta name="twitter:title" content="runtime之NSArray安全">
+<meta name="twitter:description" content="背景看了沐雨十方07的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。
+众所周知，在apple的淫威下NSArray,NSDictionary,NSMutableArray,NSMutableDictionary是不不能出现有关nil的操作,一旦操作就会出现crash的后果,如果我们要避免这种crash那么就要增加许多if,现在我们来利用runtime彻底解决这">
   
     <link rel="alternative" href="/atom.xml" title="马扬的博客" type="application/atom+xml">
   
@@ -128,54 +132,104 @@
 </nav>
 
       <div class="body-wrap">
+        <article id="post-runtime之NSArray、NSDictionary安全" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
         
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/01/22/runtime之NSArray、NSDictionary安全/" class="archive-article-date">
-  	<time datetime="2016-01-22T02:48:14.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-01-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/01/22/runtime之NSArray、NSDictionary安全/">runtime之NSArray安全</a>
+    <h1 class="article-title" itemprop="name">
+      runtime之NSArray安全
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>看了<a href="http://www.cnblogs.com/muyushifang07/p/5737564.html" target="_blank" rel="external"><strong>沐雨十方07</strong></a>的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。</p>
+<p>众所周知，在apple的淫威下NSArray,NSDictionary,NSMutableArray,NSMutableDictionary是不不能出现有关nil的操作,一旦操作就会出现<strong>crash</strong>的后果,如果我们要避免这种<strong>crash</strong>那么就要增加许多if,现在我们来利用runtime彻底解决这个问题.<br><br><br><a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">demo地址 : https://github.com/OneHalfTooth/Runtime_Safe</a></p>
+<p><strong>首先我们可能用到几个函数</strong>（需要包含<font color="red">运行时库</font>）<br><br> <font color="red">class_getInstanceMethod(Class cls, SEL name):得到类的实例方法</font></p>
+  <font color="red">class_getClassMethod(Class cls, SEL name):得到类的类方法</font>
+
+<p>  <font color="red"> method_exchangeImplementations(Method m1, Method m2) : 交换方法m1 和方法m2的实现</font></p>
+<h2 id="runtime之NSArray的nil操作"><a href="#runtime之NSArray的nil操作" class="headerlink" title="runtime之NSArray的nil操作"></a>runtime之NSArray的nil操作</h2><p>码代码的过程中我们一不小心可能就会出现类似于这种情况</p>
+<pre><code>NSArray * temp = @[@&quot;0&quot;,@&quot;1&quot;,@&quot;2&quot;];
+NSString * str = [temp objectAtIndex:4];
+</code></pre><p>后果就是<strong>crash</strong><br><br>但是我们发现大牛们写代码的时候通常<strong>很少出现对数组越界</strong>的异常处理情况,到底是什么原因呢，其实我也不知道😝<br><br>而我是使用runtime的黑魔法来解决这种情况的,请看源码<br></p>
+<pre><code>- (id)custmeObjectAtIndex:(NSInteger)index{
+if (index &gt;= self.count) {
+    return nil;
+}
+//或许你对这里有个疑问，稍后解答
+return [self custmeObjectAtIndex:index];
+}
+</code></pre><p>首先我声明一个方法,因为我要用黑魔法<font color="red">（Method Swizzling）</font>将系统的<strong>objectAtIndex:</strong>方法实现给替换掉,这样做的目的是在<strong>NSArray调用objectAtIndex:</strong>方法的时候，首先调用<strong>(custmeObjectAtIndex:)</strong>本人定义好的方法,然后在custmeObjectAtIndex:这个方法中去判断参数合法性，再做下一步打算.<br><br>然后我们开始使用<font color="red">（Method Swizzling）</font>将系统<strong>objectAtIndex:</strong>的实现和<strong>(custmeObjectAtIndex:)</strong>的实现进行交换</p>
+<pre><code>//NSArray 在编译的时候名字并不是NSarray而是__NSArray0
+Class arrayM = NSClassFromString(@&quot;__NSArray0&quot;);
+
+//获取到系统objectAtIndex:
+Method objectAtIndex = class_getInstanceMethod(arrayM, @selector(objectAtIndex:));
+
+//获取自定义的custmeObjectAtIndex:
+Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeObjectAtIndex:));
+
+//交换两个方法的实现
+method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
+</code></pre><p>至此,我们常见的数组越界crash已经被解决了,但是你是不是已经蒙圈了😁,为什么在<strong>- (id)custmeObjectAtIndex:(NSInteger)index</strong>方法中出现了 <strong>[self custmeObjectAtIndex:index];</strong>自己调用自己这种情况呢,前边我已经说了是交换两个方法的实现,所以说两个方法的内容<strong>(简单的说就是方法里边的代码)</strong>已经被交换,所以[self custmeObjectAtIndex:index]这句代码调用的系统objectAtIndex:的实现，所以并不是自己调用自己</p>
+<p><strong>至此一个关于NSArray的runtime已经结束,更多请<a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">查看demo</a></strong></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/01/22/runtime之NSArray、NSDictionary安全/" class="archive-article-date">
+  	<time datetime="2016-01-22T02:48:14.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-01-22</time>
+</a>
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/字典-数组-崩溃-安全-运行时-runtime-NSArray插入nil崩溃、NSDictionary插入nil崩溃/">字典,数组,崩溃,安全,运行时,runtime,NSArray插入nil崩溃、NSDictionary插入nil崩溃</a></li></ul>
 	</div>
 
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-  
-    </div></section>
+
   
 
-    
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
 
 
       </div>
@@ -198,8 +252,8 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
