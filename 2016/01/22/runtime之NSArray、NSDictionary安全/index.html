@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="马扬的博客">
 <meta property="og:description" content="背景看了沐雨十方07的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。
 众所周知，在apple的淫威下NSArray,NSDictionary,NSMutableArray,NSMutableDictionary是不不能出现有关nil的操作,一旦操作就会出现crash的后果,如果我们要避免这种crash那么就要增加许多if,现在我们来利用runtime彻底解决这">
-<meta property="og:updated_time" content="2016-09-22T09:18:03.000Z">
+<meta property="og:updated_time" content="2016-09-22T09:20:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="runtime之NSArray安全">
 <meta name="twitter:description" content="背景看了沐雨十方07的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。
@@ -180,7 +180,7 @@ Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeOb
 //交换两个方法的实现
 method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
 </code></pre><p>至此,我们常见的数组越界crash已经被解决了,但是你是不是已经蒙圈了😁,为什么在<strong>- (id)custmeObjectAtIndex:(NSInteger)index</strong>方法中出现了 <strong>[self custmeObjectAtIndex:index];</strong>自己调用自己这种情况呢,前边我已经说了是交换两个方法的实现,所以说两个方法的内容<strong>(简单的说就是方法里边的代码)</strong>已经被交换,所以[self custmeObjectAtIndex:index]这句代码调用的系统objectAtIndex:的实现，所以并不是自己调用自己</p>
-<p><strong>至此一个关于NSArray的runtime已经结束,更多请<a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">查看demo</a></strong></p>
+<p><strong>至此一个关于NSArray的runtime已经结束,更多请<a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">查看demo</a></strong><br><br><strong>欢迎提出您的宝贵意见:<font color="blue">mayang_email@sina.cn</font></strong></p>
 
       
     </div>
