@@ -1,0 +1,24 @@
+@charset "UTF-8";
+/* CSS Document */
+
+p{
+	/*text-align 居中*/
+	text-align:center;
+	color:#2183EF;
+	margin:auto;
+	padding:auto;
+}
+title{
+	color:#F4070B;
+	font-size:36px;
+}
+
+
+body{
+	color:#39E07B
+}
+
+/* id选择器 */
+#red {
+	color:#F3131F;
+}
