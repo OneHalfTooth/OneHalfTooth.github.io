@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/html/PersonalProfile/css/PersonalProfile.css</loc>
+    
+    <lastmod>2016-09-24T08:41:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/html/PersonalProfile/js/personalProfile.js</loc>
     
     <lastmod>2016-09-24T08:32:04.000Z</lastmod>
@@ -19,13 +26,6 @@
     <loc>http://yoursite.com/html/PersonalProfile/html/PersonalProfile.html</loc>
     
     <lastmod>2016-09-24T08:29:25.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/html/PersonalProfile/css/PersonalProfile.css</loc>
-    
-    <lastmod>2016-09-24T08:22:58.000Z</lastmod>
     
   </url>
   

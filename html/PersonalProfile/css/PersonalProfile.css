@@ -34,6 +34,8 @@ table{
 	min-width:280px;
 	margin-left:auto;
 	margin-right:auto;
+	border-color:clear;
+	border-width:0
 }
 /* 姓名 table的第一行 */
 #table_title_th{
