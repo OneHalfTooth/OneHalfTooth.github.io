@@ -3,6 +3,28 @@
 
 
     
+    
+    
+    
+    
+    
+  <url>
+    <loc>http://yoursite.com/2016/01/23/runtime%E4%B9%8BNSMutableArray%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2016-09-23T10:35:40.000Z</lastmod>
+    <data>
+        <display>
+        <title>runtime之NSMutableArray安全</title>
+        <pubTime>2016-01-23T03:23:31.000Z</pubTime>
+        
+        <tag>字典,数组,崩溃,安全,运行时,runtime,NSMutableDictionary插入nil崩溃,NSMutableArray插入nil崩溃</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
   <url>
     <loc>http://yoursite.com/2016/01/22/runtime%E4%B9%8BNSArray%E3%80%81NSDictionary%E5%AE%89%E5%85%A8/</loc>
     <lastmod>2016-09-23T08:55:20.000Z</lastmod>
@@ -19,24 +41,5 @@
     </data>
     </url>
 
-    
-  <url>
-    <loc>http://yoursite.com/2016/01/23/runtime%E4%B9%8BNSMutableArray%E5%AE%89%E5%85%A8/</loc>
-    <lastmod>2016-09-23T08:53:54.000Z</lastmod>
-    <data>
-        <display>
-        <title>runtime之NSMutableArray安全</title>
-        <pubTime>2016-01-23T03:23:31.000Z</pubTime>
-        
-        <tag>字典,数组,崩溃,安全,运行时,runtime,NSMutableDictionary插入nil崩溃,NSMutableArray插入nil崩溃</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-    
     
 </urlset>
