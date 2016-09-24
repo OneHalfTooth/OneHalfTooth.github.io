@@ -2,13 +2,6 @@
 /* CSS Document */
 
 
-body{
-	background-image:url(../source/back_image.jpg);
-	background-size:cover;
-	background-repeat:no-repeat;
-	background-attachment:fixed
-}
-
 /* 用户头像的div*/
 .userImageDiv{
 	width:100px;
@@ -48,6 +41,16 @@ table{
 tr{
 	height:50px;
 	width:100%;
+	border-color:clear;
+	border-width:0
+}
+th{
+	border-color:clear;
+	border-width:0
+}
+td{
+	border-color:clear;
+	border-width:0
 }
 h1{
 	text-align:center;
