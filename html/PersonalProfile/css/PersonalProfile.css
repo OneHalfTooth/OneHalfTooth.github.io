@@ -55,7 +55,12 @@ td{
 h1{
 	text-align:center;
 }
-
+/*本人作品的p*/
+.p_zp{
+	text-align: center;
+	font-size: 24px;
+	font-weight: 100;
+}
 
 
 
