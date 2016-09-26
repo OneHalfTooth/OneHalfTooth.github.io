@@ -63,7 +63,11 @@ h1{
 	margin-bottom: 0;
 	float: left;
 }
-
+.profile{
+	color: #437dff;
+	text-align: right;
+	text-decoration: underline;
+}
 
 
 
