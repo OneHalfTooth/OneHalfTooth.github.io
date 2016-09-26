@@ -4,6 +4,64 @@
   
     
     <entry>
+      <title><![CDATA[runtime之NSMutableDictionary安全]]></title>
+      <url>http://yoursite.com/2016/01/24/runtime%E4%B9%8BNSMutableDictionary%E5%AE%89%E5%85%A8/</url>
+      <content type="html"><![CDATA[<p>众所周知,apple要求我们在NSMutableDictionary中不能插入nil,所以我们一旦出现这种操作就会crash,但是我们不能保证完全不会出现这种操作,除非使用大量if去做参数合法性判断</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSMutableDictionary * testDic = [[NSMutableDictionary alloc]init];</div><div class="line">[testDic setObject:nil forKey:@&quot;key&quot;];</div><div class="line">[testDic removeObjectForKey:nil];</div></pre></td></tr></table></figure>
+<p><strong>比如以上两种情况,肯定毫不犹豫的就crash</strong><br><br><strong>注意:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">testDic[&quot;key&quot;] = nil;</div></pre></td></tr></table></figure></p>
+<p>是不会崩溃的,因为系统默认做了空值检查,推荐以后都用这种写法.</p>
+<h5 id="我们现在要做的如果就是你一不小心出现以上操作-程序不会crash"><a href="#我们现在要做的如果就是你一不小心出现以上操作-程序不会crash" class="headerlink" title="我们现在要做的如果就是你一不小心出现以上操作,程序不会crash"></a>我们现在要做的如果就是你一不小心出现以上操作,程序不会crash</h5><p><strong>我们要用到这么几个方法</strong></p>
+<font color="green"><br>//得到类的实例方法的实现 返回值为Method类型</font><br><strong>1、</strong> class_getInstanceMethod(Class cls, SEL name)<br><br><font color="green"> //得到类的类方法的实现 返回值为Method类型</font><br><strong>2、</strong> class_getClassMethod(Class cls, SEL name)<br><br><font color="green"> //交换方法m1 和方法m2的实现</font><br><strong>3、</strong> method_exchangeImplementations(Method m1, Method m2)<br><br><font color="green"> /*就像Application有生命周期回调方法一样,在Objective-C的类被加载和初始化的时候的回调方法,可以使用 Method Swizzing 以保证 Method Swizzing成功*/</font><br><strong>4、</strong> + (void)load<br>
+
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ol>
+<li>使用runtime <font color="red"> Method Swizzing </font>替换上述几个方法</li>
+<li>让程序每次调用的以上几个方法之前,首先调用我们自定义的方法</li>
+<li>在我们自定义的方法中校验参数合法性等,以保障之后调用系统的方法不会产生<font color="red">crash</font></li>
+<li>执行完参数合法性判断之后,调用系统的方法,以达到预期调用目的</li>
+</ol>
+<h3 id="要点"><a href="#要点" class="headerlink" title="要点 "></a><font color="red">要点 </font></h3><ol>
+<li>在编译过程中NSMutableArray对象的Class 应该是<font color="red"><strong>__NSDictionaryM</strong> </font><small>(注意是双下划线)</small></li>
+<li>必须保证在NSMutableArray这个对象初始化,或者使用之前已经完成<font color="red"> <strong>Method Swizzing</strong> </font>替换</li>
+</ol>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p> <strong>首先我们来完成前三步</strong></p>
+<pre><code> -(void)customSetObject:(id)anObject forKey:(id&lt;NSCopying&gt;)aKey{
+    if (anObject) {
+       [self customSetObject:anObject forKey:aKey];
+    }else{
+       NSLog(@&quot;setObject了一个空，key为%@&quot;,aKey);
+   }
+}
+-(void)customRemoveObjectForKey:(id)aKey{
+    if (aKey) {
+        [self customRemoveObjectForKey:aKey];
+    }else{
+       NSLog(@&quot;remove了一个空，key为%@&quot;,aKey);
+    }
+}
+</code></pre><p><strong>至此 用来替换系统方法的方法已经准备好了</strong><br><br><strong>然后我们要用自己的方法去替换系统的方法的实现</strong></p>
+<pre><code>+(void)load{
+    Class dictCls = NSClassFromString(@&quot;__NSDictionaryM&quot;);
+
+    Method methodSetObjSuper = class_getInstanceMethod(dictCls, NSSelectorFromString(@&quot;setObject:forKey:&quot;));
+    Method methodSetObj = class_getInstanceMethod(dictCls, @selector(customSetObject:forKey:));
+    method_exchangeImplementations(methodSetObj, methodSetObjSuper);
+
+    Method methodSuperRemoveKey = class_getInstanceMethod(dictCls, @selector(removeObjectForKey:));
+    Method methodRemoveKey = class_getInstanceMethod(dictCls, @selector(customRemoveObjectForKey:));
+    method_exchangeImplementations(methodRemoveKey, methodSuperRemoveKey);
+}
+</code></pre><p><strong>需要注意的是</strong> NSMutableDictionary在编译的时候是__NSDictionaryM类(双下划线)</p>
+<h3 id="然后我们需要创建一个NSMutableDictionary的分类将代码放进去"><a href="#然后我们需要创建一个NSMutableDictionary的分类将代码放进去" class="headerlink" title="然后我们需要创建一个NSMutableDictionary的分类将代码放进去"></a>然后我们需要创建一个NSMutableDictionary的分类将代码放进去</h3><p><strong>比如</strong><br><img src="/img/NSMutableDictionary.png"><br>然后你就可以尝试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSMutableDictionary * testDic = [[NSMutableDictionary alloc]init];</div><div class="line">[testDic setObject:nil forKey:@&quot;key&quot;];</div><div class="line">[testDic removeObjectForKey:nil];</div></pre></td></tr></table></figure></p>
+<p>然后你就会发现程序并没有崩溃,其实原理非常简单.</p>
+<ol>
+<li>我们在程序开始运行的时候已经将系统的方法实现替换成自己的,同时也将自己的方法实现替换成系统的,所以如果想执行系统的方法,其实会先执行我们自定义的方法实现,我们在自己的方法实现中做参数合法性判断,如果不会引起系统崩溃那我们就去调用系统方法,会引起的话就不调用,所以肯定不会崩溃.</li>
+</ol>
+<h2 id="demo-https-github-com-OneHalfTooth-Runtime-Safe"><a href="#demo-https-github-com-OneHalfTooth-Runtime-Safe" class="headerlink" title="demo(https://github.com/OneHalfTooth/Runtime_Safe"></a><a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">demo(https://github.com/OneHalfTooth/Runtime_Safe</a></h2><p><strong>个人邮箱:mayang_email@sina.cn</strong></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[runtime之NSDictionary安全]]></title>
       <url>http://yoursite.com/2016/01/24/runtime%E4%B9%8BNSDictionary%E5%AE%89%E5%85%A8/</url>
       <content type="html"><![CDATA[<p>昨天已经写文章探讨<a href="http://www.masyang.com/2016/01/23/runtime之NSMutableArray安全/" target="_blank" rel="external">runtime之NSDictionary安全</a>那么今天我们就来探讨一下怎样让NSDictionary安全,使NSDictionary操作nil而不crash<br><a id="more"></a></p>

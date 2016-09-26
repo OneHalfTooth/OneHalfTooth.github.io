@@ -4,6 +4,23 @@
 
     
   <url>
+    <loc>http://yoursite.com/2016/01/24/runtime%E4%B9%8BNSMutableDictionary%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2016-09-26T09:35:13.000Z</lastmod>
+    <data>
+        <display>
+        <title>runtime之NSMutableDictionary安全</title>
+        <pubTime>2016-01-24T09:02:10.000Z</pubTime>
+        
+        <tag>字典,数组,崩溃,安全,运行时,runtime,nil,崩溃,crash</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2016/01/24/runtime%E4%B9%8BNSDictionary%E5%AE%89%E5%85%A8/</loc>
     <lastmod>2016-09-26T08:53:36.000Z</lastmod>
     <data>
