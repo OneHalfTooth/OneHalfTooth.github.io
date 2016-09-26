@@ -46,7 +46,7 @@ body{
 	    <th width="100px">电子邮箱:</th><td colspan="3">mayang_email@sina.cn</td><td></td><td></td>
     </tr>
     <tr>
-	    <th width="100px">联系电话:</th><td colspan="3">+(86) 13507627815</td><td></td><td></td>
+	    <th width="100px">联系电话:</th><td colspan="3">+(86) 135****7815</td><td></td><td></td>
     </tr>
 	<tr>
 	    <th width="100px">githud:</th><td colspan="3"><a href="https://github.com/OneHalfTooth" target="_blank">https://github.com/OneHalfTooth</a></td><td></td><td></td>
@@ -59,9 +59,33 @@ body{
 
 <!--查看简历-->
 <div>
-    <p class="p_zp">本人作品:</p>
-    <!--<img>-->
+	<div><p class="p_zp">本人近期作品</p></div>
 
+
+    <!--<img>-->
+	<!--子元素用浮动,父级元素必须有overflow:hidden;表示宽度跟随子级元素变化-->
+	<div style=" overflow:hidden;display: table; margin-left: auto; margin-right: auto;">
+		<div class="icondiv_left">
+			<img class="iconsize" src="../source/newwineclient.png" onclick="push_app_store(0)">
+			<p onclick="push_app_store(0)" style="text-align: center">酒运达</p>
+		</div>
+		<div class="icondiv_left">
+			<img class="iconsize" src="../source/xiaodakuaipao.png" onclick="push_app_store(1)">
+			<p onclick="push_app_store(1)" style="text-align: center">小达快跑</p>
+		</div>
+		<div class="icondiv_left">
+			<img class="iconsize" src="../source/xiaoniujipei.png" onclick="push_app_store(2)">
+			<p onclick="push_app_store(2)" style="text-align: center">小牛集配</p>
+		</div>
+		<div class="icondiv_left">
+			<img class="iconsize" src="../source/xiangleme.png" onclick="push_app_store(3)">
+			<p onclick="push_app_store(3)" style="text-align: center">享了么</p>
+		</div>
+		<div class="icondiv_left">
+			<img class="iconsize" src="../source/maimaitong.png" onclick="push_app_store(4)">
+			<p onclick="push_app_store(3)" style="text-align: center">买卖通</p>
+		</div>
+	</div>
 </div>
 
 </body>

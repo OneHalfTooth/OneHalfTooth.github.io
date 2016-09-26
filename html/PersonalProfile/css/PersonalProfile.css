@@ -59,10 +59,22 @@ h1{
 .p_zp{
 	text-align: center;
 	font-size: 24px;
-	font-weight: 100;
+	font-weight:bold;
 }
-
-
+/*作品的img大小*/
+.iconsize{
+	width: 60px;
+	height:60px;
+	border-radius: 15px;
+}
+/*作品*/
+.icondiv_left{
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-top: 0;
+	margin-bottom: 0;
+	float: left;
+}
 
 
 
