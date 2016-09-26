@@ -12,7 +12,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/01/22/runtime之NSArray、NSDictionary安全/index.html">
 <meta property="og:site_name" content="马扬的博客">
 <meta property="og:description" content="看了沐雨十方07的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。">
-<meta property="og:updated_time" content="2016-09-23T08:55:20.000Z">
+<meta property="og:updated_time" content="2016-09-26T05:56:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="runtime之NSArray安全">
 <meta name="twitter:description" content="看了沐雨十方07的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。">
@@ -175,8 +175,47 @@ Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeOb
 method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
 </code></pre><p>至此,我们常见的数组越界crash已经被解决了,但是你是不是已经蒙圈了😁,为什么在<strong>- (id)custmeObjectAtIndex:(NSInteger)index</strong>方法中出现了 <strong>[self custmeObjectAtIndex:index];</strong>自己调用自己这种情况呢,前边我已经说了是交换两个方法的实现,所以说两个方法的内容<strong>(简单的说就是方法里边的代码)</strong>已经被交换,所以[self custmeObjectAtIndex:index]这句代码调用的系统objectAtIndex:的实现，所以并不是自己调用自己</p>
 <p><strong>我们还需要注意一点,我们必须保证任何时间,只要是有关NSArray的操作,我们的runtime已经执行过了<br>所以我们要在+ (void)load方法去执行这个Swizzing</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">   #import &lt;UIKit/UIKit.h&gt;</div><div class="line">   #import &lt;objc/runtime.h&gt;</div><div class="line">   </div><div class="line">//分类</div><div class="line">   @implementation NSArray (Safe)</div><div class="line">//初始化的时候会被执行一次</div><div class="line">   + (void)load &#123;</div><div class="line">    </div><div class="line">   Method originalMethod = class_getClassMethod(self, @selector(arrayWithObjects:count:));</div><div class="line">   Method swizzledMethod = class_getClassMethod(self, @selector(customArrayWithObjects:count:));</div><div class="line">   method_exchangeImplementations(originalMethod, swizzledMethod);</div><div class="line">   </div><div class="line">   Class arrayM = NSClassFromString(@&quot;__NSArray0&quot;);</div><div class="line">   Method objectAtIndex = class_getInstanceMethod(arrayM, @selector(objectAtIndex:));</div><div class="line">   Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeObjectAtIndex:));</div><div class="line">   method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);</div><div class="line">   </div><div class="line">   &#125;</div><div class="line">   </div><div class="line">   </div><div class="line">+ (instancetype)customArrayWithObjects:(const id [])objects count:(NSUInteger)cnt &#123;</div><div class="line">   </div><div class="line">    id nObjects[cnt];</div><div class="line">    int i=0, j=0;</div><div class="line">    for (; i&lt;cnt &amp;&amp; j&lt;cnt; i++) &#123;</div><div class="line">        if (objects[i]) &#123;</div><div class="line">            nObjects[j] = objects[i];</div><div class="line">            j++;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return [self customArrayWithObjects:nObjects count:j];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (id)custmeObjectAtIndex:(NSInteger)index&#123;</div><div class="line"></div><div class="line">    if (index &gt;= self.count) &#123;</div><div class="line">        return nil;</div><div class="line">    &#125;</div><div class="line">   return [self custmeObjectAtIndex:index];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>至此一个关于NSArray的安全类已经结束,当然这只是一部分,更详细请<a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">查看demo:https://github.com/OneHalfTooth/Runtime_Safe</a></strong><br><br><strong>欢迎提出您的宝贵意见:<font color="blue">mayang_email@sina.cn</font></strong></p>
+<pre><code>#import &lt;UIKit/UIKit.h&gt;
+#import &lt;objc/runtime.h&gt;
+
+//分类
+@implementation NSArray (Safe)
+//初始化的时候会被执行一次
++ (void)load {
+
+Method originalMethod = class_getClassMethod(self, @selector(arrayWithObjects:count:));
+Method swizzledMethod = class_getClassMethod(self, @selector(customArrayWithObjects:count:));
+method_exchangeImplementations(originalMethod, swizzledMethod);
+
+Class arrayM = NSClassFromString(@&quot;__NSArray0&quot;);
+Method objectAtIndex = class_getInstanceMethod(arrayM, @selector(objectAtIndex:));
+Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeObjectAtIndex:));
+method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
+
+}
+
+
++ (instancetype)customArrayWithObjects:(const id [])objects count:(NSUInteger)cnt {
+
+    id nObjects[cnt];
+    int i=0, j=0;
+    for (; i&lt;cnt &amp;&amp; j&lt;cnt; i++) {
+        if (objects[i]) {
+            nObjects[j] = objects[i];
+            j++;
+        }
+    }
+    return [self customArrayWithObjects:nObjects count:j];
+}
+
+- (id)custmeObjectAtIndex:(NSInteger)index{
+
+    if (index &gt;= self.count) {
+        return nil;
+    }
+return [self custmeObjectAtIndex:index];
+}
+</code></pre><p><strong>至此一个关于NSArray的安全类已经结束,当然这只是一部分,更详细请<a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">查看demo:https://github.com/OneHalfTooth/Runtime_Safe</a></strong><br><br><strong>欢迎提出您的宝贵意见:<font color="blue">mayang_email@sina.cn</font></strong></p>
 
       
     </div>
