@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="马扬的博客">
 <meta property="og:description" content="昨天的博文:runtime之NSArray安全已经介绍了有关通过 Swizzing 使NSArray安全的操作,那么今天我们来谈一下相对繁琐的使用Swizzing让NSMutableArray安全的操作.PS:文笔不行,望海涵">
 <meta property="og:image" content="http://yoursite.com/img/NSMutableArraySafeImage.png">
-<meta property="og:updated_time" content="2016-09-23T10:35:40.000Z">
+<meta property="og:updated_time" content="2016-09-26T05:53:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="runtime之NSMutableArray安全">
 <meta name="twitter:description" content="昨天的博文:runtime之NSArray安全已经介绍了有关通过 Swizzing 使NSArray安全的操作,那么今天我们来谈一下相对繁琐的使用Swizzing让NSMutableArray安全的操作.PS:文笔不行,望海涵">
@@ -170,17 +170,117 @@
 <li>arr[0] = @”value” 和 [array addObject:@”value”] 或者 [array insertObject:@”value” atIndex:0]<font color="red"><strong>调用的系统方法是不同的</strong></font>.</li>
 </ol>
 <h5 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h5><h6 id="一、使用Method-Swizzing替换上述几个方法"><a href="#一、使用Method-Swizzing替换上述几个方法" class="headerlink" title="一、使用Method Swizzing替换上述几个方法"></a><small>一、使用<font color="red">Method Swizzing</font>替换上述几个方法</small></h6><p>自定义上述的几个方法,用来替换系统的几个方法<small>(要求:参数类型,返回值最好保持一致)<font color="red">看完这几个方法,可能有些许疑惑,稍后为你解答</font></small>.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">//用来替换removeObject:方法</div><div class="line">-(void)customRemoveObject:(id)anObject&#123;</div><div class="line">    if (anObject) &#123;/*参数合法性判断*/</div><div class="line">	    //调用系统的RemoveObject:方法</div><div class="line">        [self customRemoveObject:anObject];</div><div class="line">    &#125;else&#123;</div><div class="line">        NSLog(@&quot;数组移除了一个nil的元素&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">//替换removeObjectAtIndex:方法</div><div class="line">-(void)customRemoveObjectAtIndex:(NSUInteger)index&#123;</div><div class="line">    if (index &lt; self.count) &#123;/*参数合法性判断*/</div><div class="line">	    //调用系统的RemoveObjectAtIndex:方法</div><div class="line">        [self customRemoveObjectAtIndex:index];</div><div class="line">    &#125;else&#123;</div><div class="line">        NSLog(@&quot;数组越界操作,下标为%lu&quot;,index);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">//用来替换同类的 arr[0] = @&quot;value&quot;这种写法</div><div class="line">-(void)msySetObject:(id)obj atIndexedSubscript:(NSUInteger)idx&#123;</div><div class="line">    if (obj) &#123;/*参数合法性判断*/</div><div class="line">	    //调用系统的setObject:atIndexedSubscript:方法</div><div class="line">        [self msySetObject:obj atIndexedSubscript:idx];</div><div class="line">    &#125;else&#123;</div><div class="line">        NSLog(@&quot;数组赋值为nil：%s传了个空值\n&quot;,__func__);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">- (void)msyInsertObject:(id)anObject atIndex:(NSUInteger)index&#123;</div><div class="line">    if (anObject &amp;&amp; index &lt;= self.count) &#123;/*参数合法性判断*/</div><div class="line">	    //调用系统的insertObject:atIndex:方法</div><div class="line">        [self msyInsertObject:anObject atIndex:index];</div><div class="line">    &#125;else&#123;</div><div class="line">        NSLog(@&quot;数组赋值为nil：%s传了个空值\n&quot;,__func__);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">- (void)msyAddObject:(id)obj&#123;</div><div class="line">    if (obj) &#123;/*参数合法性判断*/</div><div class="line">    //调用系统的ObjectAtIndex:方法</div><div class="line">        [self msyAddObject:obj];</div><div class="line">    &#125;else&#123;</div><div class="line">        NSLog(@&quot;数组赋值为nil：%s传了个空值\n&quot;,__func__);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">- (id)custmeObjectAtIndex:(NSInteger)index&#123;</div><div class="line">    if (index &gt;= self.count) &#123;/*参数合法性判断*/</div><div class="line">        return nil;</div><div class="line">    &#125;</div><div class="line">    //调用系统的ObjectAtIndex:方法</div><div class="line">    return [self custmeObjectAtIndex:index];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>至此 用来替换系统方法的方法已经准备好了</strong><br><br><strong>然后我们要用自己的方法去替换系统的方法的实现</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">    //必须包含运行时的库</div><div class="line">    #import &lt;objc/runtime.h&gt;</div><div class="line">    </div><div class="line">    //在load方法里边交换自定义方法与系统方法的实现,</div><div class="line">    //因为这个方法会在类初始化之前执行,这样我们就可以保证系统方法的实现已经被我们替换</div><div class="line">    +(void)load&#123;</div><div class="line">    </div><div class="line">    //先获取NSMutableArray的Class @&quot;__NSArrayM&quot; 为双下划线</div><div class="line">    Class arrayM = NSClassFromString(@&quot;__NSArrayM&quot;);</div><div class="line">    </div><div class="line">    //获取实例方法addObject:的Method</div><div class="line">    Method methodSuper = class_getInstanceMethod(arrayM, @selector(addObject:));</div><div class="line">    //获取自己定义的实例方法msyAddObject:的Method</div><div class="line">    Method method = class_getInstanceMethod(arrayM, @selector(msyAddObject:));</div><div class="line">    //交换两个方法的实现</div><div class="line">    method_exchangeImplementations(methodSuper, method);</div><div class="line">    </div><div class="line">    //一下注释同上</div><div class="line">    Method methodSuperInsert = class_getInstanceMethod(arrayM, @selector(insertObject:atIndex:));</div><div class="line">    Method methodInsert = class_getInstanceMethod(arrayM, @selector(msyInsertObject:atIndex:));</div><div class="line">    method_exchangeImplementations(methodSuperInsert, methodInsert);</div><div class="line">    </div><div class="line">    Method methodSuperSetObj = class_getInstanceMethod(arrayM, @selector(setObject:atIndexedSubscript:));</div><div class="line">    Method methodSetObj = class_getInstanceMethod(arrayM, @selector(msySetObject:atIndexedSubscript:));</div><div class="line">    method_exchangeImplementations(methodSetObj, methodSuperSetObj);</div><div class="line">    </div><div class="line">    Method methodSuperRemove = class_getInstanceMethod(arrayM, @selector(removeObjectAtIndex:));</div><div class="line">    Method methodRemove = class_getInstanceMethod(arrayM, @selector(customRemoveObjectAtIndex:));</div><div class="line">    method_exchangeImplementations(methodSuperRemove, methodRemove);</div><div class="line">    </div><div class="line">    Method methodSuperRemoveObj = class_getInstanceMethod(arrayM, @selector(removeObject:));</div><div class="line">    Method methodRemoveObj = class_getInstanceMethod(arrayM, @selector(customRemoveObject:));</div><div class="line">    method_exchangeImplementations(methodSuperRemoveObj, methodRemoveObj);</div><div class="line">    </div><div class="line">    Method objectAtIndex = class_getInstanceMethod(arrayM, @selector(objectAtIndex:));</div><div class="line">    Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeObjectAtIndex:));</div><div class="line">    method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code>//用来替换removeObject:方法
+-(void)customRemoveObject:(id)anObject{
+    if (anObject) {/*参数合法性判断*/
+        //调用系统的RemoveObject:方法
+        [self customRemoveObject:anObject];
+    }else{
+        NSLog(@&quot;数组移除了一个nil的元素&quot;);
+    }
+}
+//替换removeObjectAtIndex:方法
+-(void)customRemoveObjectAtIndex:(NSUInteger)index{
+    if (index &lt; self.count) {/*参数合法性判断*/
+        //调用系统的RemoveObjectAtIndex:方法
+        [self customRemoveObjectAtIndex:index];
+    }else{
+        NSLog(@&quot;数组越界操作,下标为%lu&quot;,index);
+    }
+}
+//用来替换同类的 arr[0] = @&quot;value&quot;这种写法
+-(void)msySetObject:(id)obj atIndexedSubscript:(NSUInteger)idx{
+    if (obj) {/*参数合法性判断*/
+        //调用系统的setObject:atIndexedSubscript:方法
+        [self msySetObject:obj atIndexedSubscript:idx];
+    }else{
+        NSLog(@&quot;数组赋值为nil：%s传了个空值\n&quot;,__func__);
+    }
+}
+- (void)msyInsertObject:(id)anObject atIndex:(NSUInteger)index{
+    if (anObject &amp;&amp; index &lt;= self.count) {/*参数合法性判断*/
+        //调用系统的insertObject:atIndex:方法
+        [self msyInsertObject:anObject atIndex:index];
+    }else{
+        NSLog(@&quot;数组赋值为nil：%s传了个空值\n&quot;,__func__);
+    }
+}
+- (void)msyAddObject:(id)obj{
+    if (obj) {/*参数合法性判断*/
+    //调用系统的ObjectAtIndex:方法
+        [self msyAddObject:obj];
+    }else{
+        NSLog(@&quot;数组赋值为nil：%s传了个空值\n&quot;,__func__);
+    }
+}
+- (id)custmeObjectAtIndex:(NSInteger)index{
+    if (index &gt;= self.count) {/*参数合法性判断*/
+        return nil;
+    }
+    //调用系统的ObjectAtIndex:方法
+    return [self custmeObjectAtIndex:index];
+}
+</code></pre><p><strong>至此 用来替换系统方法的方法已经准备好了</strong><br><br><strong>然后我们要用自己的方法去替换系统的方法的实现</strong></p>
+<pre><code>//必须包含运行时的库
+#import &lt;objc/runtime.h&gt;
+
+//在load方法里边交换自定义方法与系统方法的实现,
+//因为这个方法会在类初始化之前执行,这样我们就可以保证系统方法的实现已经被我们替换
++(void)load{
+
+//先获取NSMutableArray的Class @&quot;__NSArrayM&quot; 为双下划线
+Class arrayM = NSClassFromString(@&quot;__NSArrayM&quot;);
+
+//获取实例方法addObject:的Method
+Method methodSuper = class_getInstanceMethod(arrayM, @selector(addObject:));
+//获取自己定义的实例方法msyAddObject:的Method
+Method method = class_getInstanceMethod(arrayM, @selector(msyAddObject:));
+//交换两个方法的实现
+method_exchangeImplementations(methodSuper, method);
+
+//一下注释同上
+Method methodSuperInsert = class_getInstanceMethod(arrayM, @selector(insertObject:atIndex:));
+Method methodInsert = class_getInstanceMethod(arrayM, @selector(msyInsertObject:atIndex:));
+method_exchangeImplementations(methodSuperInsert, methodInsert);
+
+Method methodSuperSetObj = class_getInstanceMethod(arrayM, @selector(setObject:atIndexedSubscript:));
+Method methodSetObj = class_getInstanceMethod(arrayM, @selector(msySetObject:atIndexedSubscript:));
+method_exchangeImplementations(methodSetObj, methodSuperSetObj);
+
+Method methodSuperRemove = class_getInstanceMethod(arrayM, @selector(removeObjectAtIndex:));
+Method methodRemove = class_getInstanceMethod(arrayM, @selector(customRemoveObjectAtIndex:));
+method_exchangeImplementations(methodSuperRemove, methodRemove);
+
+Method methodSuperRemoveObj = class_getInstanceMethod(arrayM, @selector(removeObject:));
+Method methodRemoveObj = class_getInstanceMethod(arrayM, @selector(customRemoveObject:));
+method_exchangeImplementations(methodSuperRemoveObj, methodRemoveObj);
+
+Method objectAtIndex = class_getInstanceMethod(arrayM, @selector(objectAtIndex:));
+Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeObjectAtIndex:));
+method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
+</code></pre><p>}</p>
 <h6 id="二、创建一个NSMutableArray-的分类-将上述代码放入"><a href="#二、创建一个NSMutableArray-的分类-将上述代码放入" class="headerlink" title="二、创建一个NSMutableArray 的分类,将上述代码放入"></a><small>二、创建一个NSMutableArray 的分类,将上述代码放入</small></h6><p><img src="/img/NSMutableArraySafeImage.png"><br>😆😆😆😆😆😆<br><br>然后你就可以愉快的这样了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">NSMutableArray * array = [[NSMutableArray alloc]init];</div><div class="line">[array addObject:nil];</div><div class="line">[array addObjectsFromArray:nil];</div><div class="line">[array insertObject:nil atIndex:0];</div><div class="line">[array insertObject:@&quot;value&quot; atIndex:9999];</div><div class="line">[array insertObjects:nil atIndexes:0];</div><div class="line">[array removeObject:nil];</div><div class="line">[array removeObjectAtIndex:9999];</div><div class="line">[array removeObjectsInArray:nil];</div></pre></td></tr></table></figure>
-<p>并且你会神奇的发现他没有crash</p>
+<pre><code>NSMutableArray * array = [[NSMutableArray alloc]init];
+[array addObject:nil];
+[array addObjectsFromArray:nil];
+[array insertObject:nil atIndex:0];
+[array insertObject:@&quot;value&quot; atIndex:9999];
+[array insertObjects:nil atIndexes:0];
+[array removeObject:nil];
+[array removeObjectAtIndex:9999];
+[array removeObjectsInArray:nil];
+</code></pre><p>并且你会神奇的发现他没有crash</p>
 <h2 id="遗留问题"><a href="#遗留问题" class="headerlink" title="遗留问题"></a>遗留问题</h2><ol>
 <li><strong>上述代码中出现了自己调用自己</strong></li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (void)msyAddObject:(id)obj&#123;</div><div class="line">    if (obj) &#123;/*参数合法性判断*/</div><div class="line">        [self msyAddObject:obj];//调用系统的addObject:方法</div><div class="line">    &#125;else&#123;</div><div class="line">        NSLog(@&quot;数组赋值为nil：%s传了个空值\n&quot;,__func__);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><small>如果你细心肯定会发现第3行代码出现了自己调用自己的情况,但是我在后边的注释确是<font color="green">//调用系统的addObject:方法</font>.<br>正常的说,这种情况应该是一个死循环,但是你不要忘了现在我们使用了Method Swizzing,我们已经用runtime 将<font color="red">msyAddObject:方法的方法的<big><strong>实现</strong></big>与addObject:的<strong><big>实现</big></strong>交换</font><br>我们交换的只是实现,只是方法名还是没有变,所以写在msyAddObject:的代码,经过我们的<font color="red">method_exchangeImplementations(Method m1,Method m2)</font>之后已经不是写在msyAddObject:里边,而是在系统的addObject:中,所以我们在msyAddObject:调用msyAddObject:的时候,其实是调用系统addObject:的实现,所以并不是自己调用自己😄,也就不会出现死循环了</small></p>
+<pre><code>-(void)msyAddObject:(id)obj{
+        if (obj) {/*参数合法性判断*/
+          [self msyAddObject:obj];//调用系统的addObject:方法
+      }else{
+           NSLog(@&quot;数组赋值为nil：%s传了个空值\n&quot;,__func__);
+      }
+ }
+</code></pre><p><small>如果你细心肯定会发现第3行代码出现了自己调用自己的情况,但是我在后边的注释确是<font color="green">//调用系统的addObject:方法</font>.<br>正常的说,这种情况应该是一个死循环,但是你不要忘了现在我们使用了Method Swizzing,我们已经用runtime 将<font color="red">msyAddObject:方法的方法的<big><strong>实现</strong></big>与addObject:的<strong><big>实现</big></strong>交换</font><br>我们交换的只是实现,只是方法名还是没有变,所以写在msyAddObject:的代码,经过我们的<font color="red">method_exchangeImplementations(Method m1,Method m2)</font>之后已经不是写在msyAddObject:里边,而是在系统的addObject:中,所以我们在msyAddObject:调用msyAddObject:的时候,其实是调用系统addObject:的实现,所以并不是自己调用自己😄,也就不会出现死循环了</small></p>
 <ol>
 <li><strong>或许你发现本人在创建分类的时候出现了一个#ifdef DEBUG #else #endif</strong></li>
 </ol>
