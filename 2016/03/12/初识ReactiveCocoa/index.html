@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>初识ReactiveCocoa | 马扬的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ReactiveCocoa(简称为RAC), 是由Github开源的一个应用于iOS和OS开发的新框架, RAC具有函数式编程和响应式编程的特性, 通过这篇文章对RAC有一个简单的了解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识ReactiveCocoa">
+<meta property="og:url" content="http://yoursite.com/2016/03/12/初识ReactiveCocoa/index.html">
+<meta property="og:site_name" content="马扬的博客">
+<meta property="og:description" content="ReactiveCocoa(简称为RAC), 是由Github开源的一个应用于iOS和OS开发的新框架, RAC具有函数式编程和响应式编程的特性, 通过这篇文章对RAC有一个简单的了解。">
+<meta property="og:updated_time" content="2016-09-28T02:33:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识ReactiveCocoa">
+<meta name="twitter:description" content="ReactiveCocoa(简称为RAC), 是由Github开源的一个应用于iOS和OS开发的新框架, RAC具有函数式编程和响应式编程的特性, 通过这篇文章对RAC有一个简单的了解。">
+  
+    <link rel="alternative" href="/atom.xml" title="马扬的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//img/avatar.jpg">
+  
+  <script src="/style.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic" target="_blank">
+			
+			<img src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"">马扬</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">马扬的博客</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">友情链接</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+		        
+					<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+		        
+			</div>
+		</nav>
+	</header>
+</div>
+
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">马扬</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic">
+				
+					<img src="/img/avatar.jpg" class="js-avatar">
+				
+				</a>
+			<hgroup>
+			  <a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"><h1 class="header-author">马扬</h1></a>
+			</hgroup>
+			
+			<p class="header-subtitle">马扬的博客</p>
+			
+			<nav class="header-menu">
+      <ul>
+      
+      					<li><a href="/">主页</a></li>
+      		        
+      				</ul>
+      			</nav>
+      			<nav class="header-nav">
+      				<div class="social">
+      					
+      						<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+      			        
+      						<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+      			        
+      				</div>
+      			</nav>
+      		</header>
+      	</div>
+      </nav>
+
+      <div class="body-wrap">
+        <article id="post-初识ReactiveCocoa" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      初识ReactiveCocoa
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank" rel="external">ReactiveCocoa</a>(简称为RAC), 是由Github开源的一个应用于iOS和OS开发的新框架, RAC具有函数式编程和响应式编程的特性, 通过这篇文章对RAC有一个简单的了解。</p>
+<a id="more"></a>
+<h3 id="1-如何导入ReactiveCocoa框架"><a href="#1-如何导入ReactiveCocoa框架" class="headerlink" title="1.如何导入ReactiveCocoa框架"></a>1.如何导入ReactiveCocoa框架</h3><p>通常都会使用CocoaPods（用于管理第三方框架的插件）帮助我们导入。PS:<a href="http://code4app.com/article/cocoapods-install-usage" target="_blank" rel="external">CocoaPods教程</a><br><strong>注意:</strong> 2.5版本以后不支持iOS7</p>
+<h3 id="2-ReactiveCocoa常见类"><a href="#2-ReactiveCocoa常见类" class="headerlink" title="2.ReactiveCocoa常见类"></a>2.ReactiveCocoa常见类</h3><p>　　学习框架首要之处:个人认为先要搞清楚框架中常用的类，在RAC中最核心的类RACSiganl,搞定这个类就能用ReactiveCocoa开发了。<br><strong>RACSiganl：</strong> 信号类,一般表示将来有数据传递，只要有数据改变，信号内部接收到数据，就会马上发出数据。</p>
+<ul>
+<li>信号类(RACSiganl)，只是表示当数据改变时，信号内部会发出数据，它本身不具备发送信号的能力，而是交给内部一个订阅者去发出。</li>
+<li>默认一个信号都是冷信号，也就是值改变了，也不会触发，只有订阅了这个信号，这个信号才会变为热信号，值改变了才会触发。</li>
+<li>如何订阅信号：调用信号RACSignal的subscribeNext就能订阅。</li>
+<li><code>RACSiganl</code>简单使用:</li>
+</ul>
+<pre><code>
+    // RACSignal使用步骤：
+    // 1.创建信号 + (RACSignal *)createSignal:(RACDisposable * (^)(id<racsubscriber> subscriber))didSubscribe
+    // 2.订阅信号,才会激活信号. - (RACDisposable *)subscribeNext:(void (^)(id x))nextBlock
+    // 3.发送信号 - (void)sendNext:(id)value
+
+    // RACSignal底层实现：
+    // 1.创建信号，首先把didSubscribe保存到信号中，还不会触发。
+    // 2.当信号被订阅，也就是调用signal的subscribeNext:nextBlock
+    // 2.2 subscribeNext内部会创建订阅者subscriber，并且把nextBlock保存到subscriber中。
+    // 2.1 subscribeNext内部会调用siganl的didSubscribe
+    // 3.siganl的didSubscribe中调用[subscriber sendNext:@1];
+    // 3.1 sendNext底层其实就是执行subscriber的nextBlock
+
+    // 1.创建信号
+    RACSignal *siganl = [RACSignal createSignal:^RACDisposable *(id<racsubscriber> subscriber) {
+        // block调用时刻：每当有订阅者订阅信号，就会调用block。
+        // 2.发送信号
+        [subscriber sendNext:@1];
+        // 如果不在发送数据，最好发送信号完成，内部会自动调用[RACDisposable disposable]取消订阅信号。
+        [subscriber sendCompleted];
+        return [RACDisposable disposableWithBlock:^{
+            // block调用时刻：当信号发送完成或者发送错误，就会自动执行这个block,取消订阅信号。
+            // 执行完Block后，当前信号就不在被订阅了。
+            NSLog(@"信号被销毁");
+        }];
+    }];
+    // 3.订阅信号,才会激活信号.
+    [siganl subscribeNext:^(id x) {
+        // block调用时刻：每当有信号发出数据，就会调用block.
+        NSLog(@"接收到数据:%@",x);
+    }];</racsubscriber></racsubscriber></code></pre>
+
+
+<p><strong>RACSubscriber</strong>: 表示订阅者的意思，用于发送信号，这是一个协议，不是一个类，只要遵守这个协议，并且实现方法才能成为订阅者。通过create创建的信号，都有一个订阅者，帮助他发送数据。<br><strong>RACDisposable</strong>: 用于取消订阅或者清理资源，当信号发送完成或者发送错误的时候，就会自动触发它。</p>
+<ul>
+<li><code>使用场景</code>:不想监听某个信号时，可以通过它主动取消订阅信号。</li>
+</ul>
+<p><strong>RACSubject</strong>:信号提供者，自己可以充当信号，又能发送信号。</p>
+<ul>
+<li><code>使用场景</code>:通常用来代替代理，有了它，就不必要定义代理了。</li>
+</ul>
+<p><strong>RACReplaySubjec</strong>:重复提供信号类，RACSubject的子类。</p>
+<ul>
+<li><code>RACReplaySubject</code>与<code>RACSubject</code>区别:<br>　　　&gt; RACReplaySubject可以先发送信号，在订阅信号，RACSubject就不可以。</li>
+<li><code>使用场景一</code>:如果一个信号每被订阅一次，就需要把之前的值重复发送一遍，使用重复提供信号类。</li>
+<li><code>使用场景二</code>:可以设置capacity数量来限制缓存的value的数量,即只缓充最新的几个值。</li>
+<li><code>RACSubject</code>和<code>RACReplaySubject</code>简单使用:</li>
+</ul>
+<pre><code>
+// RACSubject使用步骤
+    // 1.创建信号 [RACSubject subject]，跟RACSiganl不一样，创建信号时没有block。
+    // 2.订阅信号 - (RACDisposable *)subscribeNext:(void (^)(id x))nextBlock
+    // 3.发送信号 sendNext:(id)value
+
+    // RACSubject:底层实现和RACSignal不一样。
+    // 1.调用subscribeNext订阅信号，只是把订阅者保存起来，并且订阅者的nextBlock已经赋值了。
+    // 2.调用sendNext发送信号，遍历刚刚保存的所有订阅者，一个一个调用订阅者的nextBlock。
+
+    // 1.创建信号
+    RACSubject *subject = [RACSubject subject];
+
+    // 2.订阅信号
+    [subject subscribeNext:^(id x) {
+        // block调用时刻：当信号发出新值，就会调用.
+        NSLog(@"第一个订阅者%@",x);
+    }];
+    [subject subscribeNext:^(id x) {
+        // block调用时刻：当信号发出新值，就会调用.
+        NSLog(@"第二个订阅者%@",x);
+    }];
+
+    // 3.发送信号
+    [subject sendNext:@"1"];
+
+
+    // RACReplaySubject使用步骤:
+    // 1.创建信号 [RACSubject subject]，跟RACSiganl不一样，创建信号时没有block。
+    // 2.可以先订阅信号，也可以先发送信号。
+    // 2.1 订阅信号 - (RACDisposable *)subscribeNext:(void (^)(id x))nextBlock
+    // 2.2 发送信号 sendNext:(id)value
+
+    // RACReplaySubject:底层实现和RACSubject不一样。
+    // 1.调用sendNext发送信号，把值保存起来，然后遍历刚刚保存的所有订阅者，一个一个调用订阅者的nextBlock。
+    // 2.调用subscribeNext订阅信号，遍历保存的所有值，一个一个调用订阅者的nextBlock
+
+    // 如果想当一个信号被订阅，就重复播放之前所有值，需要先发送信号，在订阅信号。
+    // 也就是先保存值，在订阅值。
+
+    // 1.创建信号
+    RACReplaySubject *replaySubject = [RACReplaySubject subject];
+
+    // 2.发送信号
+    [replaySubject sendNext:@1];
+    [replaySubject sendNext:@2];
+
+    // 3.订阅信号
+    [replaySubject subscribeNext:^(id x) {
+
+        NSLog(@"第一个订阅者接收到的数据%@",x);
+    }];
+
+    // 订阅信号
+    [replaySubject subscribeNext:^(id x) {
+
+        NSLog(@"第二个订阅者接收到的数据%@",x);
+    }];
+</code></pre>
+
+<ul>
+<li><code>RACSubject</code>替换代理</li>
+</ul>
+<pre><code>
+// 需求:
+    // 1.给当前控制器添加一个按钮，modal到另一个控制器界面
+    // 2.另一个控制器view中有个按钮，点击按钮，通知当前控制器
+
+步骤一：在第二个控制器.h，添加一个RACSubject代替代理。
+@interface TwoViewController : UIViewController
+
+@property (nonatomic, strong) RACSubject *delegateSignal;
+
+@end
+
+步骤二：监听第二个控制器按钮点击
+@implementation TwoViewController
+- (IBAction)notice:(id)sender {
+    // 通知第一个控制器，告诉它，按钮被点了
+
+     // 通知代理
+     // 判断代理信号是否有值
+    if (self.delegateSignal) {
+        // 有值，才需要通知
+        [self.delegateSignal sendNext:nil];
+    }
+}
+@end
+
+步骤三：在第一个控制器中，监听跳转按钮，给第二个控制器的代理信号赋值，并且监听.
+@implementation OneViewController
+- (IBAction)btnClick:(id)sender {
+
+    // 创建第二个控制器
+    TwoViewController *twoVc = [[TwoViewController alloc] init];
+
+    // 设置代理信号
+    twoVc.delegateSignal = [RACSubject subject];
+
+    // 订阅代理信号
+    [twoVc.delegateSignal subscribeNext:^(id x) {
+
+        NSLog(@"点击了通知按钮");
+    }];
+
+    // 跳转到第二个控制器
+    [self presentViewController:twoVc animated:YES completion:nil];
+
+}
+@end
+</code></pre>
+
+<ul>
+<li><code>RACTuple</code>:元组类,类似NSArray,用来包装值.</li>
+<li><code>RACSequence</code>:RAC中的集合类，用于代替NSArray,NSDictionary,可以使用它来快速遍历数组和字典。</li>
+<li><code>使用场景</code>：1.字典转模型</li>
+<li><code>RACSequence</code>和<code>RACTuple</code>简单使用</li>
+</ul>
+<pre><code>
+// 1.遍历数组
+    NSArray *numbers = @[@1,@2,@3,@4];
+
+    // 这里其实是三步
+    // 第一步: 把数组转换成集合RACSequence numbers.rac_sequence
+    // 第二步: 把集合RACSequence转换RACSignal信号类,numbers.rac_sequence.signal
+    // 第三步: 订阅信号，激活信号，会自动把集合中的所有值，遍历出来。
+    [numbers.rac_sequence.signal subscribeNext:^(id x) {
+
+        NSLog(@"%@",x);
+    }];
+
+
+    // 2.遍历字典,遍历出来的键值对会包装成RACTuple(元组对象)
+    NSDictionary *dict = @{@"name":@"xmg",@"age":@18};
+    [dict.rac_sequence.signal subscribeNext:^(RACTuple *x) {
+
+        // 解包元组，会把元组的值，按顺序给参数里面的变量赋值
+        RACTupleUnpack(NSString *key,NSString *value) = x;
+
+        // 相当于以下写法
+//        NSString *key = x[0];
+//        NSString *value = x[1];
+
+        NSLog(@"%@ %@",key,value);
+
+    }];
+
+
+    // 3.字典转模型
+    // 3.1 OC写法
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"flags.plist" ofType:nil];
+
+    NSArray *dictArr = [NSArray arrayWithContentsOfFile:filePath];
+
+    NSMutableArray *items = [NSMutableArray array];
+
+    for (NSDictionary *dict in dictArr) {
+        FlagItem *item = [FlagItem flagWithDict:dict];
+        [items addObject:item];
+    }
+
+    // 3.2 RAC写法
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"flags.plist" ofType:nil];
+
+    NSArray *dictArr = [NSArray arrayWithContentsOfFile:filePath];
+
+    NSMutableArray *flags = [NSMutableArray array];
+
+    _flags = flags;
+
+    // rac_sequence注意点：调用subscribeNext，并不会马上执行nextBlock，而是会等一会。
+    [dictArr.rac_sequence.signal subscribeNext:^(id x) {
+        // 运用RAC遍历字典，x：字典
+
+        FlagItem *item = [FlagItem flagWithDict:x];
+
+        [flags addObject:item];
+
+    }];
+
+    NSLog(@"%@",  NSStringFromCGRect([UIScreen mainScreen].bounds));
+
+
+    // 3.3 RAC高级写法:
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"flags.plist" ofType:nil];
+
+    NSArray *dictArr = [NSArray arrayWithContentsOfFile:filePath];
+    // map:映射的意思，目的：把原始值value映射成一个新值
+    // array: 把集合转换成数组
+    // 底层实现：当信号被订阅，会遍历集合中的原始值，映射成新值，并且保存到新的数组里。
+    NSArray *flags = [[dictArr.rac_sequence map:^id(id value) {
+
+        return [FlagItem flagWithDict:value];
+
+    }] array];
+</code></pre>
+
+<ul>
+<li><code>RACMulticastConnection</code>:用于当一个信号，被多次订阅时，为了保证创建信号时，避免多次调用创建信号中的block，造成副作用，可以使用这个类处理。</li>
+<li><code>使用注意</code>:RACMulticastConnection通过RACSignal的-publish或者-muticast:方法创建.</li>
+<li><code>RACMulticastConnection</code>简单使用:</li>
+</ul>
+<pre><code>
+// RACMulticastConnection使用步骤:
+    // 1.创建信号 + (RACSignal *)createSignal:(RACDisposable * (^)(id<racsubscriber> subscriber))didSubscribe
+    // 2.创建连接 RACMulticastConnection *connect = [signal publish];
+    // 3.订阅信号,注意：订阅的不在是之前的信号，而是连接的信号。 [connect.signal subscribeNext:nextBlock]
+    // 4.连接 [connect connect]
+
+    // RACMulticastConnection底层原理:
+    // 1.创建connect，connect.sourceSignal -> RACSignal(原始信号)  connect.signal -> RACSubject
+    // 2.订阅connect.signal，会调用RACSubject的subscribeNext，创建订阅者，而且把订阅者保存起来，不会执行block。
+    // 3.[connect connect]内部会订阅RACSignal(原始信号)，并且订阅者是RACSubject
+    // 3.1.订阅原始信号，就会调用原始信号中的didSubscribe
+    // 3.2 didSubscribe，拿到订阅者调用sendNext，其实是调用RACSubject的sendNext
+    // 4.RACSubject的sendNext,会遍历RACSubject所有订阅者发送信号。
+    // 4.1 因为刚刚第二步，都是在订阅RACSubject，因此会拿到第二步所有的订阅者，调用他们的nextBlock
+
+
+    // 需求：假设在一个信号中发送请求，每次订阅一次都会发送请求，这样就会导致多次请求。
+    // 解决：使用RACMulticastConnection就能解决.
+
+    // 1.创建请求信号
+   RACSignal *signal = [RACSignal createSignal:^RACDisposable *(id<racsubscriber> subscriber) {
+
+
+        NSLog(@"发送请求");
+
+        return nil;
+    }];
+    // 2.订阅信号
+    [signal subscribeNext:^(id x) {
+
+        NSLog(@"接收数据");
+
+    }];
+    // 2.订阅信号
+    [signal subscribeNext:^(id x) {
+
+        NSLog(@"接收数据");
+
+    }];
+
+    // 3.运行结果，会执行两遍发送请求，也就是每次订阅都会发送一次请求
+
+
+    // RACMulticastConnection:解决重复请求问题
+    // 1.创建信号
+    RACSignal *signal = [RACSignal createSignal:^RACDisposable *(id<racsubscriber> subscriber) {
+
+
+        NSLog(@"发送请求");
+        [subscriber sendNext:@1];
+
+        return nil;
+    }];
+
+    // 2.创建连接
+    RACMulticastConnection *connect = [signal publish];
+
+    // 3.订阅信号，
+    // 注意：订阅信号，也不能激活信号，只是保存订阅者到数组，必须通过连接,当调用连接，就会一次性调用所有订阅者的sendNext:
+    [connect.signal subscribeNext:^(id x) {
+
+        NSLog(@"订阅者一信号");
+
+    }];
+
+    [connect.signal subscribeNext:^(id x) {
+
+        NSLog(@"订阅者二信号");
+
+    }];
+
+    // 4.连接,激活信号
+    [connect connect];
+</racsubscriber></racsubscriber></racsubscriber></code></pre>
+
+<ul>
+<li><code>RACCommand</code>:RAC中用于处理事件的类，可以把事件如何处理,事件中的数据如何传递，包装到这个类中，他可以很方便的监控事件的执行过程。</li>
+<li><code>使用场景</code>:监听按钮点击，网络请求</li>
+<li><code>RACCommand</code>简单使用</li>
+</ul>
+<pre><code>
+// 一、RACCommand使用步骤:
+    // 1.创建命令 initWithSignalBlock:(RACSignal * (^)(id input))signalBlock
+    // 2.在signalBlock中，创建RACSignal，并且作为signalBlock的返回值
+    // 3.执行命令 - (RACSignal *)execute:(id)input
+
+    // 二、RACCommand使用注意:
+    // 1.signalBlock必须要返回一个信号，不能传nil.
+    // 2.如果不想要传递信号，直接创建空的信号[RACSignal empty];
+    // 3.RACCommand中信号如果数据传递完，必须调用[subscriber sendCompleted]，这时命令才会执行完毕，否则永远处于执行中。
+
+    // 三、RACCommand设计思想：内部signalBlock为什么要返回一个信号，这个信号有什么用。
+    // 1.在RAC开发中，通常会把网络请求封装到RACCommand，直接执行某个RACCommand就能发送请求。
+    // 2.当RACCommand内部请求到数据的时候，需要把请求的数据传递给外界，这时候就需要通过signalBlock返回的信号传递了。
+
+    // 四、如何拿到RACCommand中返回信号发出的数据。
+    // 1.RACCommand有个执行信号源executionSignals，这个是signal of signals(信号的信号),意思是信号发出的数据是信号，不是普通的类型。
+    // 2.订阅executionSignals就能拿到RACCommand中返回的信号，然后订阅signalBlock返回的信号，就能获取发出的值。
+
+    // 五、监听当前命令是否正在执行executing
+
+    // 六、使用场景,监听按钮点击，网络请求
+
+
+    // 1.创建命令
+    RACCommand *command = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
+
+
+        NSLog(@"执行命令");
+
+        // 创建空信号,必须返回信号
+        //        return [RACSignal empty];
+
+        // 2.创建信号,用来传递数据
+        return [RACSignal createSignal:^RACDisposable *(id<racsubscriber> subscriber) {
+
+            [subscriber sendNext:@"请求数据"];
+
+            // 注意：数据传递完，最好调用sendCompleted，这时命令才执行完毕。
+            [subscriber sendCompleted];
+
+            return nil;
+        }];
+
+    }];
+
+    // 强引用命令，不要被销毁，否则接收不到数据
+    _conmmand = command;
+
+
+    // 3.执行命令
+    [self.conmmand execute:@1];
+
+    // 4.订阅RACCommand中的信号
+    [command.executionSignals subscribeNext:^(id x) {
+
+        [x subscribeNext:^(id x) {
+
+            NSLog(@"%@",x);
+        }];
+
+    }];
+
+    // RAC高级用法
+    // switchToLatest:用于signal of signals，获取signal of signals发出的最新信号,也就是可以直接拿到RACCommand中的信号
+    [command.executionSignals.switchToLatest subscribeNext:^(id x) {
+
+        NSLog(@"%@",x);
+    }];
+
+    // 5.监听命令是否执行完毕,默认会来一次，可以直接跳过，skip表示跳过第一次信号。
+    [[command.executing skip:1] subscribeNext:^(id x) {
+
+        if ([x boolValue] == YES) {
+            // 正在执行
+            NSLog(@"正在执行");
+
+        }else{
+            // 执行完成
+            NSLog(@"执行完成");
+        }
+
+    }];
+</racsubscriber></code></pre>
+
+<ul>
+<li><code>RACScheduler</code>:RAC中的队列，用GCD封装的。</li>
+<li><code>RACUnit</code>:表⽰stream不包含有意义的值,也就是看到这个，可以直接理解为nil.</li>
+<li><code>RACEvent</code>: 把数据包装成信号事件(signal event)。它主要通过RACSignal的-materialize来使用，然并卵。</li>
+</ul>
+<h3 id="3-ReactiveCocoa开发中常见用法。"><a href="#3-ReactiveCocoa开发中常见用法。" class="headerlink" title="3.ReactiveCocoa开发中常见用法。"></a>3.ReactiveCocoa开发中常见用法。</h3><p>3.1 代替代理：</p>
+<ul>
+<li><code>rac_signalForSelector</code>：用于替代代理。</li>
+</ul>
+<p>3.2 代替KVO :</p>
+<ul>
+<li><code>rac_valuesAndChangesForKeyPath</code>：用于监听某个对象的属性改变。</li>
+</ul>
+<p>3.3 监听事件:</p>
+<ul>
+<li><code>rac_signalForControlEvents</code>：用于监听某个事件。</li>
+</ul>
+<p>3.4 代替通知:</p>
+<ul>
+<li><code>rac_addObserverForName</code>:用于监听某个通知。</li>
+</ul>
+<p>3.5 监听文本框文字改变:</p>
+<ul>
+<li><code>rac_textSignal</code>:只要文本框发出改变就会发出这个信号。</li>
+</ul>
+<p>3.6 处理当界面有多次请求时，需要都获取到数据时，才能展示界面</p>
+<ul>
+<li><code>rac_liftSelector:withSignalsFromArray:Signals</code>:当传入的Signals(信号数组)，每一个signal都至少sendNext过一次，就会去触发第一个selector参数的方法。</li>
+<li>使用注意：几个信号，参数一的方法就几个参数，每个参数对应信号发出的数据。</li>
+</ul>
+<p>3.7 代码演示</p>
+<pre><code>
+// 1.代替代理
+    // 需求：自定义redView,监听红色view中按钮点击
+    // 之前都是需要通过代理监听，给红色View添加一个代理属性，点击按钮的时候，通知代理做事情
+    // rac_signalForSelector:把调用某个对象的方法的信息转换成信号，就要调用这个方法，就会发送信号。
+    // 这里表示只要redV调用btnClick:,就会发出信号，订阅就好了。
+    [[redV rac_signalForSelector:@selector(btnClick:)] subscribeNext:^(id x) {
+        NSLog(@"点击红色按钮");
+    }];
+
+    // 2.KVO
+    // 把监听redV的center属性改变转换成信号，只要值改变就会发送信号
+    // observer:可以传入nil
+    [[redV rac_valuesAndChangesForKeyPath:@"center" options:NSKeyValueObservingOptionNew observer:nil] subscribeNext:^(id x) {
+
+        NSLog(@"%@",x);
+
+    }];
+
+    // 3.监听事件
+    // 把按钮点击事件转换为信号，点击按钮，就会发送信号
+    [[self.btn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+
+        NSLog(@"按钮被点击了");
+    }];
+
+    // 4.代替通知
+    // 把监听到的通知转换信号
+    [[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillShowNotification object:nil] subscribeNext:^(id x) {
+        NSLog(@"键盘弹出");
+    }];
+
+    // 5.监听文本框的文字改变
+   [_textField.rac_textSignal subscribeNext:^(id x) {
+
+       NSLog(@"文字改变了%@",x);
+   }];
+
+   // 6.处理多个请求，都返回结果的时候，统一做处理.
+    RACSignal *request1 = [RACSignal createSignal:^RACDisposable *(id<racsubscriber> subscriber) {
+
+        // 发送请求1
+        [subscriber sendNext:@"发送请求1"];
+        return nil;
+    }];
+
+    RACSignal *request2 = [RACSignal createSignal:^RACDisposable *(id<racsubscriber> subscriber) {
+        // 发送请求2
+        [subscriber sendNext:@"发送请求2"];
+        return nil;
+    }];
+
+    // 使用注意：几个信号，参数一的方法就几个参数，每个参数对应信号发出的数据。
+    [self rac_liftSelector:@selector(updateUIWithR1:r2:) withSignalsFromArray:@[request1,request2]];
+
+
+}
+// 更新UI
+- (void)updateUIWithR1:(id)data r2:(id)data1
+{
+    NSLog(@"更新UI%@  %@",data,data1);
+}
+</racsubscriber></racsubscriber></code></pre>
+
+
+<h3 id="4-ReactiveCocoa常见宏。"><a href="#4-ReactiveCocoa常见宏。" class="headerlink" title="4.ReactiveCocoa常见宏。"></a>4.ReactiveCocoa常见宏。</h3><p>4.1 <code>RAC(TARGET, [KEYPATH, [NIL_VALUE]])</code>:用于给某个对象的某个属性绑定。     </p>
+<pre><code>// 只要文本框文字改变，就会修改label的文字
+RAC(self.labelView,text) = _textField.rac_textSignal;    
+</code></pre><p>4.2 <code>RACObserve(self, name)</code>:监听某个对象的某个属性,返回的是信号。</p>
+<pre><code>[RACObserve(self.view, center) subscribeNext:^(id x) {
+
+    NSLog(@&quot;%@&quot;,x);
+}];
+</code></pre><p>4.3 <code>@weakify(Obj)和@strongify(Obj)</code>,一般两个都是配套使用,解决循环引用问题.<br>4.4 <code>RACTuplePack</code>：把数据包装成RACTuple（元组类）</p>
+<pre><code>// 把参数中的数据包装成元组
+RACTuple *tuple = RACTuplePack(@10,@20);
+</code></pre><p>4.5 <code>RACTupleUnpack</code>：把RACTuple（元组类）解包成对应的数据。</p>
+<pre><code> // 把参数中的数据包装成元组
+RACTuple *tuple = RACTuplePack(@&quot;xmg&quot;,@20);
+
+// 解包元组，会把元组的值，按顺序给参数里面的变量赋值
+// name = @&quot;xmg&quot; age = @20
+RACTupleUnpack(NSString *name,NSNumber *age) = tuple;
+</code></pre><!-- more -->
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/03/12/初识ReactiveCocoa/" class="archive-article-date">
+  	<time datetime="2016-03-12T09:44:58.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-12</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ReactiveCocoa/">ReactiveCocoa</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-price-tags"></i>
+	<a class="article-category-link" href="/categories/ReactiveCocoa/">ReactiveCocoa</a>
+	</div>
+
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/04/11/聊一聊NSOperation的那些事/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          聊一聊NSOperation的那些事
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/04/iOS动画篇-transfrom/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS动画篇之UIView动画</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="初识ReactiveCocoa" data-title="初识ReactiveCocoa" data-url="http://yoursite.com/2016/03/12/初识ReactiveCocoa/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"masyang"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 马扬
+    	</div>
+      	
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">长相一般&lt;br&gt;技术一般&lt;br&gt;欢迎多多指点&lt;a href=&quot;mailto:mayang_email@sina.cn&quot;&gt;mayang_email@sina.cn&lt;/a&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
