@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>iOS动画篇之CoreAnimation动画 | 马扬的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="App如果想被大众喜欢，漂亮的UI和精美的动画都是必不可少的，苹果虽然为UIView提供了一些常用动画，但是大部分看起来比较不错的效果都是通过操作Layer层实现的，因此了解核心动画是必要的.CoreAnimation是直接作用在CALayer上的(并非UIView上)非常强大的跨Mac OS X和iOS平台的动画处理API，Core Animation的动画执行过程都是在后台操作的，不会阻塞主线">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS动画篇之CoreAnimation动画">
+<meta property="og:url" content="http://yoursite.com/2016/02/27/iOS动画篇之CoreAnimation动画/index.html">
+<meta property="og:site_name" content="马扬的博客">
+<meta property="og:description" content="App如果想被大众喜欢，漂亮的UI和精美的动画都是必不可少的，苹果虽然为UIView提供了一些常用动画，但是大部分看起来比较不错的效果都是通过操作Layer层实现的，因此了解核心动画是必要的.CoreAnimation是直接作用在CALayer上的(并非UIView上)非常强大的跨Mac OS X和iOS平台的动画处理API，Core Animation的动画执行过程都是在后台操作的，不会阻塞主线">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_12.png?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_13.gif?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_14.gif?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_15.gif?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_16.gif?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_17.gif?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_18.gif?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_19.gif?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_20.png?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_21.png?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_22.gif?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_23.png?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_24.gif?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_25.gif?raw=true">
+<meta property="og:updated_time" content="2016-09-28T02:28:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS动画篇之CoreAnimation动画">
+<meta name="twitter:description" content="App如果想被大众喜欢，漂亮的UI和精美的动画都是必不可少的，苹果虽然为UIView提供了一些常用动画，但是大部分看起来比较不错的效果都是通过操作Layer层实现的，因此了解核心动画是必要的.CoreAnimation是直接作用在CALayer上的(并非UIView上)非常强大的跨Mac OS X和iOS平台的动画处理API，Core Animation的动画执行过程都是在后台操作的，不会阻塞主线">
+<meta name="twitter:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_12.png?raw=true">
+  
+    <link rel="alternative" href="/atom.xml" title="马扬的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//img/avatar.jpg">
+  
+  <script src="/style.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic" target="_blank">
+			
+			<img src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"">马扬</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">马扬的博客</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">友情链接</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+		        
+					<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+		        
+			</div>
+		</nav>
+	</header>
+</div>
+
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">马扬</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic">
+				
+					<img src="/img/avatar.jpg" class="js-avatar">
+				
+				</a>
+			<hgroup>
+			  <a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"><h1 class="header-author">马扬</h1></a>
+			</hgroup>
+			
+			<p class="header-subtitle">马扬的博客</p>
+			
+			<nav class="header-menu">
+      <ul>
+      
+      					<li><a href="/">主页</a></li>
+      		        
+      				</ul>
+      			</nav>
+      			<nav class="header-nav">
+      				<div class="social">
+      					
+      						<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+      			        
+      						<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+      			        
+      				</div>
+      			</nav>
+      		</header>
+      	</div>
+      </nav>
+
+      <div class="body-wrap">
+        <article id="post-iOS动画篇之CoreAnimation动画" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS动画篇之CoreAnimation动画
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>App如果想被大众喜欢，漂亮的UI和精美的动画都是必不可少的，苹果虽然为UIView提供了一些常用动画，但是大部分看起来比较不错的效果都是通过操作Layer层实现的，因此了解核心动画是必要的.CoreAnimation是直接作用在CALayer上的(并非UIView上)非常强大的跨Mac OS X和iOS平台的动画处理API，Core Animation的动画执行过程都是在后台操作的，不会阻塞主线程。<br><a id="more"></a></p>
+<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>开发中用的最多的是<code>CoreAnimation</code>动画库，简称是CA，所以动画类都是CA开头。所有的动画类都在<code>QuartzCore</code>库中，在iOS7之前使用需要<code>#import &lt;QuartzCore/QuartzCore.h&gt;</code>,iOS7之后系统已经将其自动导入了。<code>CoreAnimation</code>动画都是作用在<code>layer</code>上。<br>先来看下动画类的层级关系：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_12.png?raw=true" alt="动画层级结构"><br></div><br>关于上图中的层级结构只需要了解一下，用的多了，自然就记住了。本篇只讲述<code>CABasicAnimation</code>、<code>CAKeyframeAnimation</code>、<code>CAAnimationGroup</code>的使用。<br><br>### 使用<br>上面讲了CA动画都是作用在Layer上，而CA动画中修改的也是Layer的动画属性，可以产生动画的layer属性也有<code>Animatable</code>标识。<br>#### 1.CABasicAnimation<br><code>CABasicAnimation</code>动画主要是设置某个动画属性的初始值fromValue和结束值toValue，来产生动画效果。<br>先上个示例代码，将一个视图往上移动一段距离：<br><div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_13.gif?raw=true" alt="animation"><br></div>
+
+<pre><code>
+CABasicAnimation *postionAnimation = [CABasicAnimation animationWithKeyPath:@"position.y"];
+postionAnimation.duration = 1.0f;
+postionAnimation.fromValue = @(self.squareView.center.y);
+postionAnimation.toValue = @(self.squareView.center.y - 300);
+postionAnimation.removedOnCompletion = NO;
+postionAnimation.delegate = self;
+postionAnimation.autoreverses = YES;
+postionAnimation.fillMode = kCAFillModeForwards;
+postionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+[self.squareView.layer addAnimation:postionAnimation forKey:@"posstionAnimation"];
+</code></pre>
+
+<blockquote>
+<ul>
+<li>动画的创建使用<code>animationWithKeyPath:</code>,因为使用的keyPath所以动画属性或者其结构体中元素都可以产生动画。</li>
+<li><code>duration</code> 动画的时长。</li>
+<li><code>fromValue</code>和<code>toValue</code> 是<code>CABasicAnimation</code>的属性，都是id类型的，所以要将基本类型包装成对象。</li>
+<li><code>removedOnCompletion</code> 决定动画执行完之后是否将该动画的影响移除，默认是YES,则layer回到动画前的状态。</li>
+<li><code>fillMode</code> 是个枚举值（四种），当<code>removedOnCompletion</code>设置为NO之后才会起作用。可以设置layer是保持动画开始前的状态还是动画结束后的状态，或是其他的。</li>
+<li><code>autoreverses</code> 表示动画结束后是否 backwards(回退) 到动画开始前的状态。可与上面两个属性组合出不同效果。</li>
+<li><code>timingFunction</code> 动画的运动是匀速线性的还是先快后慢等，类似UIView动画的opitions。另外，CAMediaTimingFunction 方法可以自定义。</li>
+<li><code>delegate</code> 代理，两个动画代理方法：<code>- (void)animationDidStart:(CAAnimation *)anim</code>; 和<code>- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag</code>;</li>
+<li><code>-(void)addAnimation:(CAAnimation *)anim forKey:(nullable NSString *)key</code>; 给某个layer添加动画，与之对应的移除某个动画是<code>- (void)removeAnimationForKey:(NSString *)key</code>;</li>
+<li>还有一些其他的属性，就不一一介绍了，可以在使用的使用去.h文件中查看。</li>
+</ul>
+</blockquote>
+<p>在这里简单介绍一下fillMode<br>注意：fillMode这个属性，必须要配合下面这个属性来使用。这个属性的默认值是YES(回到原处),此时fillMode是没有作用的如果设置为NO那么就需要设置一个fillMode属性，就是动画结束之后的状态，如果不设置，动画也会回到原处。</p>
+<p><code>postionAnimation.removedOnCompletion = NO;</code></p>
+<pre><code>
+kCAFillModeRemoved 这个是默认值,也就是说当动画开始前和动画结束后,动画对layer都没有影响,动画结束后,layer会恢复到之前的状态 
+kCAFillModeForwards 当动画结束后,layer会一直保持着动画最后的状态 
+kCAFillModeBackwards 这个和kCAFillModeForwards是相对的,就是在动画开始前,你只要将动画加入了
+一个layer,layer便立即进入动画的初始状态并等待动画开始.你可以这样设定测试代码,将一个动画加入一个
+layer的时候延迟5秒执行.然后就会发现在动画没有开始的时候,只要动画被加入了layer,layer便处于动画初
+始状态 
+kCAFillModeBoth 理解了上面两个,这个就很好理解了,这个其实就是上面两个的合成.动画加入后开始之
+前,layer便处于动画初始状态,动画结束后layer保持动画最后的状态.</code></pre>    
+
+
+<h5 id="Rotation旋转"><a href="#Rotation旋转" class="headerlink" title="Rotation旋转"></a>Rotation旋转</h5><ul>
+<li><strong>Z轴</strong></li>
+</ul>
+<pre><code>
+CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+rotationAnimation.fromValue = [NSNumber numberWithFloat:0.0];
+rotationAnimation.toValue = [NSNumber numberWithFloat:2*M_PI];
+rotationAnimation.repeatCount = MAXFLOAT;
+rotationAnimation.duration =10;
+[self.rotationImgView.layer addAnimation:rotationAnimation forKey:@"transform.rotation.z"];
+</code></pre>
+
+<ul>
+<li><strong>X轴</strong></li>
+</ul>
+<pre><code>
+CABasicAnimation *rotationXAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.x"];
+rotationXAnimation.fromValue = [NSNumber numberWithFloat:0.0];
+rotationXAnimation.toValue = [NSNumber numberWithFloat:2*M_PI];
+rotationXAnimation.repeatCount = MAXFLOAT;
+rotationXAnimation.duration =3;
+[self.rotationXImgView.layer addAnimation:rotationXAnimation forKey:@"transform.rotation.x"];
+</code></pre>
+
+<ul>
+<li><strong>Y轴</strong></li>
+</ul>
+<pre><code>
+CABasicAnimation *rotationYAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
+rotationYAnimation.fromValue = [NSNumber numberWithFloat:0.0];
+rotationYAnimation.toValue = [NSNumber numberWithFloat:2*M_PI];
+rotationYAnimation.repeatCount = MAXFLOAT;
+rotationYAnimation.duration =10;
+[self.rotationYImgView.layer addAnimation:rotationYAnimation forKey:@"transform.rotation.y"];
+</code></pre>
+
+<h5 id="Scale放大缩小"><a href="#Scale放大缩小" class="headerlink" title="Scale放大缩小"></a>Scale放大缩小</h5><ul>
+<li><strong>任意方向放大</strong></li>
+</ul>
+<pre><code>
+CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+scaleAnimation.fromValue = [NSNumber numberWithFloat:1.0];
+scaleAnimation.toValue = [NSNumber numberWithFloat:1.5];
+scaleAnimation.autoreverses = YES;//自动反向执行动画效果
+scaleAnimation.repeatCount = MAXFLOAT;
+scaleAnimation.duration = 0.8;
+[self.scaleImgView.layer addAnimation:scaleAnimation forKey:@"FlyElephant.scale"];
+</code></pre>
+
+<ul>
+<li><strong>X轴放大</strong></li>
+</ul>
+<pre><code>
+CABasicAnimation *scaleXAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
+scaleXAnimation.fromValue = [NSNumber numberWithFloat:1.0];
+scaleXAnimation.toValue = [NSNumber numberWithFloat:1.5];
+scaleXAnimation.autoreverses = YES;//自动反向执行动画效果
+scaleXAnimation.repeatCount = MAXFLOAT;
+scaleXAnimation.duration = 0.8;
+[self.scaleXImgView.layer addAnimation:scaleXAnimation forKey:@"FlyElephant.scale.x"];
+</code></pre>
+
+<ul>
+<li><strong>Y轴放大</strong></li>
+</ul>
+<pre><code>
+CABasicAnimation *scaleYAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale.y"];
+scaleYAnimation.fromValue = [NSNumber numberWithFloat:1.0];
+scaleYAnimation.toValue = [NSNumber numberWithFloat:1.5];
+scaleYAnimation.autoreverses = YES;//自动反向执行动画效果
+scaleYAnimation.repeatCount = MAXFLOAT;
+scaleYAnimation.duration = 0.8;
+[self.scaleYImgView.layer addAnimation:scaleYAnimation forKey:@"FlyElephant.scale.y"];
+</code></pre>
+
+<ul>
+<li><strong>Z轴放大</strong></li>
+</ul>
+<pre><code>
+CABasicAnimation *scaleZAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale.z"];
+scaleZAnimation.fromValue = [NSNumber numberWithFloat:1.0];
+scaleZAnimation.toValue = [NSNumber numberWithFloat:1.5];
+scaleZAnimation.autoreverses = YES;//自动反向执行动画效果
+scaleZAnimation.repeatCount = MAXFLOAT;
+scaleZAnimation.duration = 0.8;
+[self.scaleZImgView.layer addAnimation:scaleZAnimation forKey:@"FlyElephant.scale.z"];
+</code></pre>
+
+<h5 id="Translation平移"><a href="#Translation平移" class="headerlink" title="Translation平移"></a>Translation平移</h5><ul>
+<li><strong>X轴平移</strong></li>
+</ul>
+<pre><code>
+CABasicAnimation *translationX=[CABasicAnimation animationWithKeyPath:@"transform.translation.x"];
+translationX.toValue=@(200);
+translationX.duration=5;
+translationX.removedOnCompletion=NO;
+translationX.fillMode=kCAFillModeForwards;
+translationX.repeatCount=MAXFLOAT;
+translationX.autoreverses=YES;
+[self.translationXImgView.layer addAnimation:translationX forKey:@"FlyElephant.translation.x"];
+
+</code></pre>
+
+<ul>
+<li><strong>Y轴平移</strong></li>
+</ul>
+<pre><code>
+CABasicAnimation *translationY=[CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
+translationY.toValue=@(100);
+translationY.duration=5;
+translationY.removedOnCompletion=NO;
+translationY.fillMode=kCAFillModeForwards;
+translationY.repeatCount=MAXFLOAT;
+translationY.autoreverses=YES;
+[self.translationYImgView.layer addAnimation:translationY forKey:@"FlyElephant.translation.y"];
+</code></pre>
+
+<ul>
+<li><strong>XY轴平移</strong></li>
+</ul>
+<pre><code>
+CABasicAnimation *translation=[CABasicAnimation animationWithKeyPath:@"transform.translation"];
+translation.toValue=[NSValue valueWithCGPoint:CGPointMake(100, 100)];
+translation.duration=5;
+translation.removedOnCompletion=NO;
+translation.fillMode=kCAFillModeForwards;
+translation.repeatCount=MAXFLOAT;
+translation.autoreverses=YES;
+[self.translationImgView.layer addAnimation:translation forKey:@"FlyElephant.translation"];
+</code></pre>
+
+<p><font color="blue"><strong>动画实例图：</strong></font></p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_14.gif?raw=true" alt="animation"><br></div>
+
+<h4 id="2-CAKeyframeAnimation"><a href="#2-CAKeyframeAnimation" class="headerlink" title="2.CAKeyframeAnimation"></a>2.CAKeyframeAnimation</h4><p>CAKeyframeAnimation我们一般称为关键帧动画，主要是利用其values属性，设置多个关键帧属性值，来产生动画。</p>
+<h5 id="基于Scale变换"><a href="#基于Scale变换" class="headerlink" title="基于Scale变换:"></a>基于Scale变换:</h5><div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_15.gif?raw=true" alt="animation"><br></div>
+
+<pre><code>
+CAKeyframeAnimation *keyAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+keyAnimation.duration = 1.0f;
+keyAnimation.beginTime = CACurrentMediaTime() + 1.0;
+
+CATransform3D transform1 = CATransform3DMakeScale(1.5, 1.5, 0);
+CATransform3D transform2 = CATransform3DMakeScale(0.8, 0.8, 0);
+CATransform3D transform3 = CATransform3DMakeScale(3, 3, 0);
+
+keyAnimation.values = @[[NSValue valueWithCATransform3D:transform1],[NSValue valueWithCATransform3D:transform2],[NSValue valueWithCATransform3D:transform3]];
+keyAnimation.keyTimes = @[@0,@0.5,@1];
+keyAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+keyAnimation.removedOnCompletion = NO;
+keyAnimation.fillMode = kCAFillModeForwards;
+[_someView.layer addAnimation:keyAnimation forKey:nil];
+</code></pre>
+
+<blockquote>
+<ul>
+<li><code>beginTime</code> 也是<code>CAAnimation</code>类的属性，可以设置动画延迟多久执行，示例代码是延迟1秒执行。</li>
+<li><code>values</code> 是<code>CAKeyframeAnimation</code>的属性，设置keyPath属性在几个关键帧的值，也是id类型的。</li>
+<li><code>keyTimes</code> 也是<code>CAKeyframeAnimation</code>的属性，每个值对应相应关键帧的时间比例值。</li>
+<li><code>timingFunctions</code> 也是<code>CAKeyframeAnimation</code>的属性，对应每个动画段的动画过渡情况；而<code>timingFunction</code>是<code>CAAnimation</code>的属性。</li>
+</ul>
+</blockquote>
+<h5 id="基于Point的变换"><a href="#基于Point的变换" class="headerlink" title="基于Point的变换:"></a>基于Point的变换:</h5><div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_16.gif?raw=true" alt="animation"><br></div>
+
+<pre><code>
+CGPoint p1=CGPointMake(self.positionImgView.center.x, self.positionImgView.center.y);
+CGPoint p2=CGPointMake(80, 100);
+CGPoint p3=CGPointMake(100, 120);
+
+CGPoint p4=CGPointMake(120, 150);
+CGPoint p5=CGPointMake(140, 160);
+NSArray *values=[NSArray arrayWithObjects:[NSValue valueWithCGPoint:p1],[NSValue valueWithCGPoint:p2],[NSValue valueWithCGPoint:p3],[NSValue valueWithCGPoint:p4],[NSValue valueWithCGPoint:p5], nil];
+CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+[animation setValues:values];
+[animation setDuration:10.0];
+[animation setCalculationMode:kCAAnimationCubic];
+animation.timingFunction=[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+[self.positionImgView.layer addAnimation:animation forKey:@"FlyElephant.point"];
+</code></pre>
+
+<h5 id="基于Path的变换"><a href="#基于Path的变换" class="headerlink" title="基于Path的变换:"></a>基于Path的变换:</h5><div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_17.gif?raw=true" alt="animation"><br></div>
+
+<pre><code>
+CGMutablePathRef path = CGPathCreateMutable();
+CGPathMoveToPoint(path,NULL,self.positionImgView.center.x,self.positionImgView.center.y);
+for(NSInteger i = 1; i < 5 i++){
+    CGPathAddLineToPoint(path, NULL, self.positionImgView.center.x+i*10,     self.positionImgView.center.y);
+}
+//曲线
+CGPathAddCurveToPoint(path,NULL,50.0,275.0,150.0,275.0,70.0,120.0);
+CGPathAddCurveToPoint(path,NULL,150.0,275.0,250.0,275.0,90.0,120.0);
+CGPathAddCurveToPoint(path,NULL,250.0,275.0,350.0,275.0,110.0,120.0);
+CGPathAddCurveToPoint(path,NULL,350.0,275.0,450.0,275.0,130.0,120.0);
+CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+[animation setPath:path];
+[animation setDuration:3.0];
+// [animation setAutoreverses:YES];
+CFRelease(path);
+[self.positionImgView.layer addAnimation:animation:@"FlyElephant"];
+</code></pre>
+
+<p>通过代码我们发现，Path和values接收都是一个数组，而不是一个固定值，这里面我们没有设置keyTimes，下面看一个常见的抖动效果:</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_18.gif?raw=true" alt="animation"><br></div>
+
+<pre><code>
+CAKeyframeAnimation *animation = [CAKeyframeAnimation animation];
+animation.keyPath = @"position.x";
+animation.values = @[ @0, @20, @-20, @20, @0 ];
+animation.keyTimes = @[ @0, @(1 /8.0), @(1/ 2.0), @(7/ 8.0), @1 ];
+animation.duration =0.5;
+animation.additive = YES;
+[self.textField.layer addAnimation:animation forKey:@"FlyElephant.Shake"];
+</code></pre>
+
+<h4 id="3-CAAnimationGroup"><a href="#3-CAAnimationGroup" class="headerlink" title="3.CAAnimationGroup"></a>3.CAAnimationGroup</h4><p>CAAnimationGroup的用法与其他动画类一样，都是添加到layer上，比CAAnimation多了一个animations属性。<br>先看示例代码，动画效果是视图一边向上移动，一边绕Y轴旋转：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_19.gif?raw=true" alt="animation"><br></div>
+
+<pre><code>
+CABasicAnimation *rotationYAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
+rotationYAnimation.fromValue = @0;
+rotationYAnimation.toValue = @(M_PI);
+rotationYAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+
+CABasicAnimation *postionAnimation = [CABasicAnimation animationWithKeyPath:@"position.y"];
+postionAnimation.fromValue = @(_markView.center.y);
+postionAnimation.toValue = @(_markView.center.y - 100);
+postionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+
+CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+animationGroup.duration = kUpDuration;
+animationGroup.removedOnCompletion = NO;
+animationGroup.fillMode = kCAFillModeForwards;
+animationGroup.delegate = self;
+animationGroup.animations = @[rotationYAnimation, postionAnimation];
+
+[_markView.layer addAnimation:animationGroup forKey:kJumpAnimation];
+</code></pre>
+
+<blockquote>
+<p>CAAnimationGroup的animations中可以放其他任何动画类（包括CAAnimationGroup），需要注意的是animations里的动画设置了duration之后动画可能会有不同，一般里面不设置，在最外层设置group的duration即可。</p>
+</blockquote>
+<h5 id="AnimationWithKeyPath的值"><a href="#AnimationWithKeyPath的值" class="headerlink" title="AnimationWithKeyPath的值"></a>AnimationWithKeyPath的值</h5><p>最开始做动画一般都会对keyPath这个值莫名其妙，因为它不是常量，需要变换的时候找不到对应的需要设置的值，如果你在网上搜索，很可能看到的是这张图:</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_20.png?raw=true" alt="animation"><br></div><br>下面这张图你基本上是找不到的，如下:<br><div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_21.png?raw=true" alt="animation"><br></div>
+
+<h4 id="4-CATransition"><a href="#4-CATransition" class="headerlink" title="4.CATransition"></a>4.CATransition</h4><p>CATransition一般来做转场动画。先上gif动画效果</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_22.gif?raw=true" alt="animation"><br></div>
+
+<pre><code>
+//修改视图的背景色
+_someView.backgroundColor = [UIColor greenColor];
+CATransition *animation = [CATransition animation];
+animation.duration = 0.5;
+/* 这里可设置的参数有：kCATransitionFade、kCATransitionPush、kCATransitionReveal、kCATransitionMoveIn、
+"cube"、"suckEffect"、"oglFlip"、"rippleEffect"、"pageCurl"、"pageUnCurl"、"cameraIrisHollowOpen"、
+ "cameraIrisHollowClose"，这些都是动画类型
+*/
+animation.type = @"cube";
+// 动画执行的方向，kCATransitionFromRight、kCATransitionFromLeft、kCATransitionFromTop、kCATransitionFromBottom
+animation.subtype = kCATransitionFromRight;
+animation.timingFunction = UIViewAnimationOptionCurveEaseInOut;
+[_someView.layer addAnimation:animation forKey:nil];
+//也可以写这里
+//    _someView.backgroundColor = [UIColor greenColor];
+</code></pre>
+
+<p>只需要在动画开始前或者动画开始后替换掉视图上显示的内容即可。具体可以看我的这篇博客<a href="http://www.guiyongdong.com/2016/09/22/iOS%E5%8A%A8%E7%94%BB%E4%B9%8BCATransition%E5%8A%A8%E7%94%BB/" target="_blank" rel="external">iOS动画之CATransition动画</a></p>
+<h4 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h4><p>附加的内容是关于CALayer和UIBezierPath。个人觉得理解了UIBezierPath和CALayer,才能更好的理解CoreAnimation动画。</p>
+<h5 id="1-UIBezierPath"><a href="#1-UIBezierPath" class="headerlink" title="1.UIBezierPath"></a>1.UIBezierPath</h5><p>UIBezierPath主要是用来绘制路径的，分为一阶、二阶…..n阶。一阶是直线，二阶以上才是曲线。而最终路径的显示还是得依靠CALayer。用CoreGraphics将路径绘制出来，最终也是绘制到CALayer上。</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_23.png?raw=true" alt="animation"><br></div>
+
+<blockquote>
+<p>方法一：构造bezierPath对象，一般用于自定义路径。<br>方法二：绘制圆弧路径，参数1是中心点位置，参数2是半径，参数3是开始的弧度值，参数4是结束的弧度值，参数5是是否顺时针(YES是顺时针方向，NO逆时针)。<br>方法三：根据某个路径绘制路径。<br>方法四：根据某个CGRect绘制内切圆或椭圆（CGRect是正方形即为圆，为长方形则为椭圆）。<br>方法五：根据某个CGRect绘制路径。<br>方法六：绘制带圆角的矩形路径，参数2哪个角，参数3，横、纵向半径。<br>方法七：绘制每个角都是圆角的矩形，参数2是半径。</p>
+</blockquote>
+<p>自定义路径时常用的API:</p>
+<pre><code>
+- (void)moveToPoint:(CGPoint)point; // 移到某个点
+- (void)addLineToPoint:(CGPoint)point; // 绘制直线
+- (void)addCurveToPoint:(CGPoint)endPoint controlPoint1:(CGPoint)controlPoint1 controlPoint2:(CGPoint)controlPoint2; //绘制贝塞尔曲线
+- (void)addQuadCurveToPoint:(CGPoint)endPoint controlPoint:(CGPoint)controlPoint; // 绘制规则的贝塞尔曲线
+- (void)addArcWithCenter:(CGPoint)center radius:(CGFloat)radius startAngle:(CGFloat)startAngle endAngle:(CGFloat)endAngle clockwise:(BOOL)clockwise
+// 绘制圆形曲线
+- (void)appendPath:(UIBezierPath *)bezierPath; // 拼接曲线
+</code></pre>
+
+<h5 id="如果将路径显示的图案显示到视图上呢？"><a href="#如果将路径显示的图案显示到视图上呢？" class="headerlink" title="如果将路径显示的图案显示到视图上呢？"></a>如果将路径显示的图案显示到视图上呢？</h5><p>有三种方式：1、直接使用UIBezierPath的方法；2、使用CoreGraphics绘制；3、利用CAShapeLayer绘制。<br>示例代码如下，绘制一个右侧为弧型的视图：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_24.gif?raw=true" alt="animation"><br></div>
+
+<pre><code>
+- (void)drawRect:(CGRect)rect
+{
+    UIColor *fillColor = [UIColor colorWithRed:0.0 green:0.722 blue:1.0 alpha:1.0];
+
+    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    [bezierPath moveToPoint:CGPointMake(0, 0)];
+    [bezierPath addLineToPoint:CGPointMake(rect.size.width - spaceWidth, 0)];
+    [bezierPath addQuadCurveToPoint:CGPointMake(rect.size.width - spaceWidth, rect.size.height) controlPoint:CGPointMake(rect.size.width - spaceWidth + _deltaWith, rect.size.height * 0.5)];
+    [bezierPath addLineToPoint:CGPointMake(0, rect.size.height)];
+    [bezierPath addLineToPoint:CGPointMake(0, 0)];
+    [bezierPath closePath];
+
+    // 1、bezierPath方法
+//    [fillColor setFill];
+//    [bezierPath fill];
+
+    // 2、使用CoreGraphics
+//    CGContextRef ctx = UIGraphicsGetCurrentContext();
+//    CGContextAddPath(ctx, bezierPath.CGPath);
+//    CGContextSetFillColorWithColor(ctx, fillColor.CGColor);
+//    CGContextFillPath(ctx);
+
+    // 3.CAShaperLayer
+    [self.layer.sublayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.path = bezierPath.CGPath;
+    shapeLayer.fillColor = fillColor.CGColor;
+    [self.layer addSublayer:shapeLayer];
+}
+</code></pre>
+
+<p><div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_25.gif?raw=true" alt="animation"><br></div><br>上图这样的视图是用UIBezierPath用多个CAShapeLayer制作出来的，而动画效果只需要改变进度的layer的strokeEnd和修改下面代表水面进度的视图位置即可。动画的组合也可以有多种方式组合<br>动画的示例代码：</p>
+<pre><code>
+- (void)setProgress:(CGFloat)progress animated:(BOOL)animated duration:(NSTimeInterval)duration
+{
+    CGFloat tempPro = progress;
+    if (tempPro > 1.0) {
+        tempPro = 1.0;
+    } else if (progress < 0.0){
+        tempPro = 0.0;
+    }
+    _progress = tempPro;
+
+    CABasicAnimation *pathAniamtion = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    pathAniamtion.duration = duration;
+    pathAniamtion.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    pathAniamtion.fromValue = [NSNumber numberWithFloat:0.0f];
+    pathAniamtion.toValue = [NSNumber numberWithFloat:_progress];
+    pathAniamtion.autoreverses = NO;
+    [_progressLayer addAnimation:pathAniamtion forKey:nil];
+
+    // 水位上升的动画
+    if (!_showSolidAnimation) {
+        return;
+    }
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        _imageView.transform = CGAffineTransformIdentity;
+        [UIView animateWithDuration:duration animations:^{
+            CGRect rect = _imageView.frame;
+            CGFloat dy = rect.size.height * progress;
+            _imageView.transform = CGAffineTransformMakeTranslation(0, -dy);
+        }];
+    });
+}
+</code></pre>
+
+<p>在用自定义的CAShapeLayer做动画时，建议在动画开始前先将动画属性与最终的属性值一致，再开始动画，不要使用removedOnCompletion控制最终的状态，这在WWDC苹果这么建议。</p>
+<p><strong>具体UIBezierPath可以看这篇文章<a href="http://www.guiyongdong.com/2016/09/22/UIBezierPath%E8%AF%A6%E8%A7%A3/" target="_blank" rel="external">UIBezierPath详解</a></strong></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/02/27/iOS动画篇之CoreAnimation动画/" class="archive-article-date">
+  	<time datetime="2016-02-27T06:08:56.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-02-27</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/动画/">动画</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-price-tags"></i>
+	<a class="article-category-link" href="/categories/动画/">动画</a>
+	</div>
+
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/03/04/iOS动画篇-transfrom/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          iOS动画篇之UIView动画
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/02/08/iOS动画之CATransition动画/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS动画之CATransition动画</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS动画篇之CoreAnimation动画" data-title="iOS动画篇之CoreAnimation动画" data-url="http://yoursite.com/2016/02/27/iOS动画篇之CoreAnimation动画/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"masyang"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 马扬
+    	</div>
+      	
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">长相一般&lt;br&gt;技术一般&lt;br&gt;欢迎多多指点&lt;a href=&quot;mailto:mayang_email@sina.cn&quot;&gt;mayang_email@sina.cn&lt;/a&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

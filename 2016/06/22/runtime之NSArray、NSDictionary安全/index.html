@@ -4,20 +4,18 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>runtime之NSMutableDictionary安全 | 马扬的博客</title>
+  <title>runtime之NSArray安全 | 马扬的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="众所周知,apple要求我们在NSMutableDictionary中不能插入nil,所以我们一旦出现这种操作就会crash,但是我们不能保证完全不会出现这种操作,除非使用大量if去做参数合法性判断">
+  <meta name="description" content="看了沐雨十方07的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="runtime之NSMutableDictionary安全">
-<meta property="og:url" content="http://yoursite.com/2016/01/24/runtime之NSMutableDictionary安全/index.html">
+<meta property="og:title" content="runtime之NSArray安全">
+<meta property="og:url" content="http://yoursite.com/2016/06/22/runtime之NSArray、NSDictionary安全/index.html">
 <meta property="og:site_name" content="马扬的博客">
-<meta property="og:description" content="众所周知,apple要求我们在NSMutableDictionary中不能插入nil,所以我们一旦出现这种操作就会crash,但是我们不能保证完全不会出现这种操作,除非使用大量if去做参数合法性判断">
-<meta property="og:image" content="http://yoursite.com/img/NSMutableDictionary.png">
-<meta property="og:updated_time" content="2016-09-26T09:35:13.000Z">
+<meta property="og:description" content="看了沐雨十方07的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。">
+<meta property="og:updated_time" content="2016-09-28T02:30:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="runtime之NSMutableDictionary安全">
-<meta name="twitter:description" content="众所周知,apple要求我们在NSMutableDictionary中不能插入nil,所以我们一旦出现这种操作就会crash,但是我们不能保证完全不会出现这种操作,除非使用大量if去做参数合法性判断">
-<meta name="twitter:image" content="http://yoursite.com/img/NSMutableDictionary.png">
+<meta name="twitter:title" content="runtime之NSArray安全">
+<meta name="twitter:description" content="看了沐雨十方07的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。">
   
     <link rel="alternative" href="/atom.xml" title="马扬的博客" type="application/atom+xml">
   
@@ -127,7 +125,7 @@
       </nav>
 
       <div class="body-wrap">
-        <article id="post-runtime之NSMutableDictionary安全" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-runtime之NSArray、NSDictionary安全" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -137,7 +135,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      runtime之NSMutableDictionary安全
+      runtime之NSArray安全
     </h1>
   
 
@@ -145,65 +143,86 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>众所周知,apple要求我们在NSMutableDictionary中不能插入nil,所以我们一旦出现这种操作就会crash,但是我们不能保证完全不会出现这种操作,除非使用大量if去做参数合法性判断</p>
-<a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSMutableDictionary * testDic = [[NSMutableDictionary alloc]init];</div><div class="line">[testDic setObject:nil forKey:@&quot;key&quot;];</div><div class="line">[testDic removeObjectForKey:nil];</div></pre></td></tr></table></figure>
-<p><strong>比如以上两种情况,肯定毫不犹豫的就crash</strong><br><br><strong>注意:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">testDic[&quot;key&quot;] = nil;</div></pre></td></tr></table></figure></p>
-<p>是不会崩溃的,因为系统默认做了空值检查,推荐以后都用这种写法.</p>
-<h5 id="我们现在要做的如果就是你一不小心出现以上操作-程序不会crash"><a href="#我们现在要做的如果就是你一不小心出现以上操作-程序不会crash" class="headerlink" title="我们现在要做的如果就是你一不小心出现以上操作,程序不会crash"></a>我们现在要做的如果就是你一不小心出现以上操作,程序不会crash</h5><p><strong>我们要用到这么几个方法</strong></p>
-<font color="green"><br>//得到类的实例方法的实现 返回值为Method类型</font><br><strong>1、</strong> class_getInstanceMethod(Class cls, SEL name)<br><br><font color="green"> //得到类的类方法的实现 返回值为Method类型</font><br><strong>2、</strong> class_getClassMethod(Class cls, SEL name)<br><br><font color="green"> //交换方法m1 和方法m2的实现</font><br><strong>3、</strong> method_exchangeImplementations(Method m1, Method m2)<br><br><font color="green"> /*就像Application有生命周期回调方法一样,在Objective-C的类被加载和初始化的时候的回调方法,可以使用 Method Swizzing 以保证 Method Swizzing成功*/</font><br><strong>4、</strong> + (void)load<br>
+        <p>看了<a href="http://www.cnblogs.com/muyushifang07/p/5737564.html" target="_blank" rel="external"><strong>沐雨十方07</strong></a>的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。</p>
+   <a id="more"></a>  
+<p>众所周知，在apple的淫威下NSArray,NSDictionary,NSMutableArray,NSMutableDictionary是不不能出现有关nil的操作,一旦操作就会出现<strong>crash</strong>的后果,如果我们要避免这种<strong>crash</strong>那么就要增加许多if,现在我们来利用runtime彻底解决这个问题.<br><br><br><a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">demo地址 : https://github.com/OneHalfTooth/Runtime_Safe</a></p>
+<p><strong>首先我们可能用到几个函数</strong>（需要包含<font color="red">运行时库</font>）<br><br> <font color="red">class_getInstanceMethod(Class cls, SEL name):得到类的实例方法</font></p>
+  <font color="red">class_getClassMethod(Class cls, SEL name):得到类的类方法</font>
 
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ol>
-<li>使用runtime <font color="red"> Method Swizzing </font>替换上述几个方法</li>
-<li>让程序每次调用的以上几个方法之前,首先调用我们自定义的方法</li>
-<li>在我们自定义的方法中校验参数合法性等,以保障之后调用系统的方法不会产生<font color="red">crash</font></li>
-<li>执行完参数合法性判断之后,调用系统的方法,以达到预期调用目的</li>
-</ol>
-<h3 id="要点"><a href="#要点" class="headerlink" title="要点 "></a><font color="red">要点 </font></h3><ol>
-<li>在编译过程中NSMutableArray对象的Class 应该是<font color="red"><strong>__NSDictionaryM</strong> </font><small>(注意是双下划线)</small></li>
-<li>必须保证在NSMutableArray这个对象初始化,或者使用之前已经完成<font color="red"> <strong>Method Swizzing</strong> </font>替换</li>
-</ol>
-<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p> <strong>首先我们来完成前三步</strong></p>
-<pre><code> -(void)customSetObject:(id)anObject forKey:(id&lt;NSCopying&gt;)aKey{
-    if (anObject) {
-       [self customSetObject:anObject forKey:aKey];
-    }else{
-       NSLog(@&quot;setObject了一个空，key为%@&quot;,aKey);
-   }
+<p>  <font color="red"> method_exchangeImplementations(Method m1, Method m2) : 交换方法m1 和方法m2的实现</font></p>
+<h2 id="runtime之NSArray的nil操作"><a href="#runtime之NSArray的nil操作" class="headerlink" title="runtime之NSArray的nil操作"></a>runtime之NSArray的nil操作</h2><p>码代码的过程中我们一不小心可能就会出现类似于这种情况</p>
+<pre><code>NSArray * temp = @[@&quot;0&quot;,@&quot;1&quot;,@&quot;2&quot;];
+NSString * str = [temp objectAtIndex:4];
+</code></pre><p>后果就是<strong>crash</strong><br><br>但是我们发现大牛们写代码的时候通常<strong>很少出现对数组越界</strong>的异常处理情况,到底是什么原因呢，其实我也不知道😝<br><br>而我是使用runtime的黑魔法来解决这种情况的,请看源码<br></p>
+<pre><code>- (id)custmeObjectAtIndex:(NSInteger)index{
+if (index &gt;= self.count) {
+    return nil;
 }
--(void)customRemoveObjectForKey:(id)aKey{
-    if (aKey) {
-        [self customRemoveObjectForKey:aKey];
-    }else{
-       NSLog(@&quot;remove了一个空，key为%@&quot;,aKey);
+//或许你对这里有个疑问，稍后解答
+return [self custmeObjectAtIndex:index];
+}
+</code></pre><p>首先我声明一个方法,因为我要用黑魔法<font color="red">（Method Swizzling）</font>将系统的<strong>objectAtIndex:</strong>方法实现给替换掉,这样做的目的是在<strong>NSArray调用objectAtIndex:</strong>方法的时候，首先调用<strong>(custmeObjectAtIndex:)</strong>本人定义好的方法,然后在custmeObjectAtIndex:这个方法中去判断参数合法性，再做下一步打算.<br><br>然后我们开始使用<font color="red">（Method Swizzling）</font>将系统<strong>objectAtIndex:</strong>的实现和<strong>(custmeObjectAtIndex:)</strong>的实现进行交换</p>
+<pre><code>//NSArray 在编译的时候名字并不是NSarray而是__NSArray0
+Class arrayM = NSClassFromString(@&quot;__NSArray0&quot;);
+
+//获取到系统objectAtIndex:
+Method objectAtIndex = class_getInstanceMethod(arrayM, @selector(objectAtIndex:));
+
+//获取自定义的custmeObjectAtIndex:
+Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeObjectAtIndex:));
+
+//交换两个方法的实现
+method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
+</code></pre><p>至此,我们常见的数组越界crash已经被解决了,但是你是不是已经蒙圈了😁,为什么在<strong>- (id)custmeObjectAtIndex:(NSInteger)index</strong>方法中出现了 <strong>[self custmeObjectAtIndex:index];</strong>自己调用自己这种情况呢,前边我已经说了是交换两个方法的实现,所以说两个方法的内容<strong>(简单的说就是方法里边的代码)</strong>已经被交换,所以[self custmeObjectAtIndex:index]这句代码调用的系统objectAtIndex:的实现，所以并不是自己调用自己</p>
+<p><strong>我们还需要注意一点,我们必须保证任何时间,只要是有关NSArray的操作,我们的runtime已经执行过了<br>所以我们要在+ (void)load方法去执行这个Swizzing</strong></p>
+<pre><code>#import &lt;UIKit/UIKit.h&gt;
+#import &lt;objc/runtime.h&gt;
+
+//分类
+@implementation NSArray (Safe)
+//初始化的时候会被执行一次
++ (void)load {
+
+Method originalMethod = class_getClassMethod(self, @selector(arrayWithObjects:count:));
+Method swizzledMethod = class_getClassMethod(self, @selector(customArrayWithObjects:count:));
+method_exchangeImplementations(originalMethod, swizzledMethod);
+
+Class arrayM = NSClassFromString(@&quot;__NSArray0&quot;);
+Method objectAtIndex = class_getInstanceMethod(arrayM, @selector(objectAtIndex:));
+Method customeObjectAtIndex = class_getInstanceMethod(arrayM, @selector(custmeObjectAtIndex:));
+method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
+
+}
+
+
++ (instancetype)customArrayWithObjects:(const id [])objects count:(NSUInteger)cnt {
+
+    id nObjects[cnt];
+    int i=0, j=0;
+    for (; i&lt;cnt &amp;&amp; j&lt;cnt; i++) {
+        if (objects[i]) {
+            nObjects[j] = objects[i];
+            j++;
+        }
     }
+    return [self customArrayWithObjects:nObjects count:j];
 }
-</code></pre><p><strong>至此 用来替换系统方法的方法已经准备好了</strong><br><br><strong>然后我们要用自己的方法去替换系统的方法的实现</strong></p>
-<pre><code>+(void)load{
-    Class dictCls = NSClassFromString(@&quot;__NSDictionaryM&quot;);
 
-    Method methodSetObjSuper = class_getInstanceMethod(dictCls, NSSelectorFromString(@&quot;setObject:forKey:&quot;));
-    Method methodSetObj = class_getInstanceMethod(dictCls, @selector(customSetObject:forKey:));
-    method_exchangeImplementations(methodSetObj, methodSetObjSuper);
+- (id)custmeObjectAtIndex:(NSInteger)index{
 
-    Method methodSuperRemoveKey = class_getInstanceMethod(dictCls, @selector(removeObjectForKey:));
-    Method methodRemoveKey = class_getInstanceMethod(dictCls, @selector(customRemoveObjectForKey:));
-    method_exchangeImplementations(methodRemoveKey, methodSuperRemoveKey);
+    if (index &gt;= self.count) {
+        return nil;
+    }
+return [self custmeObjectAtIndex:index];
 }
-</code></pre><p><strong>需要注意的是</strong> NSMutableDictionary在编译的时候是__NSDictionaryM类(双下划线)</p>
-<h3 id="然后我们需要创建一个NSMutableDictionary的分类将代码放进去"><a href="#然后我们需要创建一个NSMutableDictionary的分类将代码放进去" class="headerlink" title="然后我们需要创建一个NSMutableDictionary的分类将代码放进去"></a>然后我们需要创建一个NSMutableDictionary的分类将代码放进去</h3><p><strong>比如</strong><br><img src="/img/NSMutableDictionary.png"><br>然后你就可以尝试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSMutableDictionary * testDic = [[NSMutableDictionary alloc]init];</div><div class="line">[testDic setObject:nil forKey:@&quot;key&quot;];</div><div class="line">[testDic removeObjectForKey:nil];</div></pre></td></tr></table></figure></p>
-<p>然后你就会发现程序并没有崩溃,其实原理非常简单.</p>
-<ol>
-<li>我们在程序开始运行的时候已经将系统的方法实现替换成自己的,同时也将自己的方法实现替换成系统的,所以如果想执行系统的方法,其实会先执行我们自定义的方法实现,我们在自己的方法实现中做参数合法性判断,如果不会引起系统崩溃那我们就去调用系统方法,会引起的话就不调用,所以肯定不会崩溃.</li>
-</ol>
-<h2 id="demo-https-github-com-OneHalfTooth-Runtime-Safe"><a href="#demo-https-github-com-OneHalfTooth-Runtime-Safe" class="headerlink" title="demo(https://github.com/OneHalfTooth/Runtime_Safe"></a><a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">demo(https://github.com/OneHalfTooth/Runtime_Safe</a></h2><p><strong>个人邮箱:mayang_email@sina.cn</strong></p>
+</code></pre><p><strong>至此一个关于NSArray的安全类已经结束,当然这只是一部分,更详细请<a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">查看demo:https://github.com/OneHalfTooth/Runtime_Safe</a></strong><br><br><strong>欢迎提出您的宝贵意见:<font color="blue">mayang_email@sina.cn</font></strong></p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/01/24/runtime之NSMutableDictionary安全/" class="archive-article-date">
-  	<time datetime="2016-01-24T09:02:10.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-01-24</time>
+      <a href="/2016/06/22/runtime之NSArray、NSDictionary安全/" class="archive-article-date">
+  	<time datetime="2016-06-22T02:48:14.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-06-22</time>
 </a>
       
 	<div class="article-tag tagcloud">
@@ -221,9 +240,18 @@
   
 <nav id="article-nav">
   
+    <a href="/2016/06/23/runtime之NSDictionary安全/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          runtime之NSDictionary安全
+        
+      </div>
+    </a>
   
-    <a href="/2016/01/24/runtime之NSDictionary安全/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">runtime之NSDictionary安全</div>
+  
+    <a href="/2016/05/11/初识ReactiveCocoa/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">初识ReactiveCocoa</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -257,7 +285,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="runtime之NSMutableDictionary安全" data-title="runtime之NSMutableDictionary安全" data-url="http://yoursite.com/2016/01/24/runtime之NSMutableDictionary安全/"></div>
+	<div class="ds-thread" data-thread-key="runtime之NSArray、NSDictionary安全" data-title="runtime之NSArray安全" data-url="http://yoursite.com/2016/06/22/runtime之NSArray、NSDictionary安全/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -356,22 +384,6 @@ MathJax.Hub.Queue(function() {
 
     
     	<section class="tools-section tools-section-friends">
-  		
-  			<div class="friends-wrap" id="js-friends">
-  			
-  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.guiyongdong.com/">小冬冬的博客</a>
-  	        
-  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接2</a>
-  	        
-  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接3</a>
-  	        
-  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接4</a>
-  	        
-  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接5</a>
-  	        
-  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接6</a>
-  	        
-  	        </div>
   		
     	</section>
     

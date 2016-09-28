@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>UIBezierPath详解 | 马扬的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="我在写本篇文章之前，也没有系统学习过贝塞尔曲线，只是曾经某一次的需求需要使用到，才临时百度看了一看而且使用最基本的功能。现在总算有时间停下来好好研究研究这个神奇而伟大的贝塞尔先生！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UIBezierPath详解">
+<meta property="og:url" content="http://yoursite.com/2016/01/22/UIBezierPath详解/index.html">
+<meta property="og:site_name" content="马扬的博客">
+<meta property="og:description" content="我在写本篇文章之前，也没有系统学习过贝塞尔曲线，只是曾经某一次的需求需要使用到，才临时百度看了一看而且使用最基本的功能。现在总算有时间停下来好好研究研究这个神奇而伟大的贝塞尔先生！">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_1.jpg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_2.jpg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_3.jpg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_4.jpg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_5.jpg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_6.jpg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_7.jpg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_8.jpg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_9.jpg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_10.jpeg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_11.jpg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_12.jpeg?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_13.jpg?raw=true">
+<meta property="og:updated_time" content="2016-09-28T02:28:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UIBezierPath详解">
+<meta name="twitter:description" content="我在写本篇文章之前，也没有系统学习过贝塞尔曲线，只是曾经某一次的需求需要使用到，才临时百度看了一看而且使用最基本的功能。现在总算有时间停下来好好研究研究这个神奇而伟大的贝塞尔先生！">
+<meta name="twitter:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_1.jpg?raw=true">
+  
+    <link rel="alternative" href="/atom.xml" title="马扬的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//img/avatar.jpg">
+  
+  <script src="/style.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic" target="_blank">
+			
+			<img src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"">马扬</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">马扬的博客</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">友情链接</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+		        
+					<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+		        
+			</div>
+		</nav>
+	</header>
+</div>
+
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">马扬</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic">
+				
+					<img src="/img/avatar.jpg" class="js-avatar">
+				
+				</a>
+			<hgroup>
+			  <a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"><h1 class="header-author">马扬</h1></a>
+			</hgroup>
+			
+			<p class="header-subtitle">马扬的博客</p>
+			
+			<nav class="header-menu">
+      <ul>
+      
+      					<li><a href="/">主页</a></li>
+      		        
+      				</ul>
+      			</nav>
+      			<nav class="header-nav">
+      				<div class="social">
+      					
+      						<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+      			        
+      						<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+      			        
+      				</div>
+      			</nav>
+      		</header>
+      	</div>
+      </nav>
+
+      <div class="body-wrap">
+        <article id="post-UIBezierPath详解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      UIBezierPath详解
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>我在写本篇文章之前，也没有系统学习过贝塞尔曲线，只是曾经某一次的需求需要使用到，才临时百度看了一看而且使用最基本的功能。现在总算有时间停下来好好研究研究这个神奇而伟大的贝塞尔先生！</p>
+<a id="more"></a>
+<h4 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h4><hr>
+<p>使用<code>UIBezierPath</code>可以创建基于矢量的路径，此类是<code>Core Graphics</code>框架关于路径的封装。使用此类可以定义简单的形状，如椭圆、矩形或者有多个直线和曲线段组成的形状等。</p>
+<p><code>UIBezierPath</code>是<code>CGPathRef</code>数据类型的封装。如果是基于矢量形状的路径，都用直线和曲线去创建。我们使用直线段去创建矩形和多边形，使用曲线去创建圆弧（arc）、圆或者其他复杂的曲线形状。</p>
+<p>使用<code>UIBezierPath</code>画图步骤：</p>
+<ol>
+<li>创建一个UIBezierPath对象</li>
+<li>调用-moveToPoint:设置初始线段的起点</li>
+<li>添加线或者曲线去定义一个或者多个子路径</li>
+<li>改变UIBezierPath对象跟绘图相关的属性。如，我们可以设置画笔的属性、填充样式等</li>
+</ol>
+<h4 id="UIBezierPath创建方法介绍"><a href="#UIBezierPath创建方法介绍" class="headerlink" title="UIBezierPath创建方法介绍"></a>UIBezierPath创建方法介绍</h4><hr>
+<p>我们先看看<code>UIBezierPath</code>类提供了哪些创建方式，这些都是工厂方法，直接使用即可。</p>
+<pre><code>
++ (instancetype)bezierPath;
++ (instancetype)bezierPathWithRect:(CGRect)rect;
++ (instancetype)bezierPathWithOvalInRect:(CGRect)rect;
++ (instancetype)bezierPathWithRoundedRect:(CGRect)rect
+                            cornerRadius:(CGFloat)cornerRadius;
++ (instancetype)bezierPathWithRoundedRect:(CGRect)rect
+                        byRoundingCorners:(UIRectCorner)corners 
+                              cornerRadii:(CGSize)cornerRadii;
++ (instancetype)bezierPathWithArcCenter:(CGPoint)center 
+                                 radius:(CGFloat)radius 
+                             startAngle:(CGFloat)startAngle 
+                               endAngle:(CGFloat)endAngle 
+                              clockwise:(BOOL)clockwise;
++ (instancetype)bezierPathWithCGPath:(CGPathRef)CGPath;
+</code></pre>
+
+<p>下面我们一个一个地介绍其用途。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)bezierPath;</div></pre></td></tr></table></figure>
+<p>这个使用比较多，因为这个工厂方法创建的对象，我们可以根据我们的需要任意定制样式，可以画任何我们想画的图形。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)bezierPathWithRect:(CGRect)rect;</div></pre></td></tr></table></figure>
+<p>这个工厂方法根据一个矩形画贝塞尔曲线。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)bezierPathWithOvalInRect:(CGRect)rect;</div></pre></td></tr></table></figure>
+<p>这个工厂方法根据一个矩形画内切曲线。通常用它来画圆或者椭圆。</p>
+<pre><code>
++ (instancetype)bezierPathWithRoundedRect:(CGRect)rect
+                            cornerRadius:(CGFloat)cornerRadius;
++ (instancetype)bezierPathWithRoundedRect:(CGRect)rect
+                        byRoundingCorners:(UIRectCorner)corners 
+                              cornerRadii:(CGSize)cornerRadii;
+</code></pre>
+
+<p>第一个工厂方法是画矩形，但是这个矩形是可以画圆角的。第一个参数是矩形，第二个参数是圆角大小。<br>第二个工厂方法功能是一样的，但是可以指定某一个角画成圆角。像这种我们就可以很容易地给UIView扩展添加圆角的方法了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)bezierPathWithArcCenter:(CGPoint)center </div><div class="line">                                 radius:(CGFloat)radius </div><div class="line">                             startAngle:(CGFloat)startAngle </div><div class="line">                               endAngle:(CGFloat)endAngle </div><div class="line">                              clockwise:(BOOL)clockwise;</div></pre></td></tr></table></figure>
+<p>这个工厂方法用于画弧，参数说明如下：<br><code>center</code>: 弧线中心点的坐标<br><code>radius</code>: 弧线所在圆的半径<br><code>startAngle</code>: 弧线开始的角度值<br><code>endAngle</code>: 弧线结束的角度值<br><code>clockwise</code>: 是否顺时针画弧线</p>
+<blockquote>
+<p>温馨提示：我们下面的代码都是在自定义的BezierPathView类中的<code>- (void)drawRect:(CGRect)rect</code>方法中调用</p>
+</blockquote>
+<h5 id="画三角形"><a href="#画三角形" class="headerlink" title="画三角形"></a>画三角形</h5><hr>
+<p>先看效果图：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_1.jpg?raw=true" alt="image"><br></div>
+
+<pre><code>
+// 画三角形
+- (void)drawTrianglePath {
+
+  UIBezierPath *path = [UIBezierPath bezierPath];
+  [path moveToPoint:CGPointMake(20, 20)];
+  [path addLineToPoint:CGPointMake(self.frame.size.width - 40, 20)];
+  [path addLineToPoint:CGPointMake(self.frame.size.width / 2, self.frame.size.height - 20)];
+
+  // 最后的闭合线是可以通过调用closePath方法来自动生成的，也可以调用-addLineToPoint:方法来添加
+  //  [path addLineToPoint:CGPointMake(20, 20)];
+
+  [path closePath];
+
+  // 设置线宽
+  path.lineWidth = 1.5;
+
+  // 设置填充颜色
+  UIColor *fillColor = [UIColor greenColor];
+  [fillColor set];
+  [path fill];
+
+  // 设置画笔颜色
+  UIColor *strokeColor = [UIColor blueColor];
+  [strokeColor set];
+
+  // 根据我们设置的各个点连线
+  [path stroke];
+}
+</code></pre>
+
+<p>我们设置画笔颜色通过set方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UIColor *strokeColor = [UIColor blueColor];</div><div class="line">[strokeColor set];</div></pre></td></tr></table></figure></p>
+<p>如果我们需要设置填充颜色，比如这里设置为绿色，那么我们需要在设置画笔颜色之前先设置填充颜色，否则画笔颜色就被填充颜色替代了。也就是说，如果要让填充颜色与画笔颜色不一样，那么我们的顺序必须是先设置填充颜色再设置画笔颜色。如下，这两者顺序不能改变。因为我们设置填充颜色也是跟设置画笔颜色一样调用UIColor的-set方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 设置填充颜色</div><div class="line">UIColor *fillColor = [UIColor greenColor];</div><div class="line">[fillColor set];</div><div class="line">[path fill];</div><div class="line"></div><div class="line">// 设置画笔颜色</div><div class="line">UIColor *strokeColor = [UIColor blueColor];</div><div class="line">[strokeColor set];</div></pre></td></tr></table></figure>
+<h5 id="画矩形"><a href="#画矩形" class="headerlink" title="画矩形"></a>画矩形</h5><hr>
+<p>先看效果图：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_2.jpg?raw=true" alt="image"><br></div>
+
+<pre><code>
+// 画矩形
+- (void)drawRectPath {
+  UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(20, 20, self.frame.size.width - 40, self.frame.size.height - 40)];
+
+  path.lineWidth = 1.5;
+  path.lineCapStyle = kCGLineCapRound;
+  path.lineJoinStyle = kCGLineJoinBevel;
+
+  // 设置填充颜色
+  UIColor *fillColor = [UIColor greenColor];
+  [fillColor set];
+  [path fill];
+
+  // 设置画笔颜色
+  UIColor *strokeColor = [UIColor blueColor];
+  [strokeColor set];
+
+  // 根据我们设置的各个点连线
+  [path stroke];
+}
+</code></pre>
+
+<p>lineCapStyle属性是用来设置线条拐角帽的样式的，其中有三个选择：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">/* Line cap styles. */</div><div class="line"></div><div class="line">typedef CF_ENUM(int32_t, CGLineCap) &#123;</div><div class="line">    kCGLineCapButt,</div><div class="line">    kCGLineCapRound,</div><div class="line">    kCGLineCapSquare</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>其中，第一个是默认的，第二个是轻微圆角，第三个正方形。</p>
+<p>lineJoinStyle属性是用来设置两条线连结点的样式，其中也有三个选择：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">/* Line join styles. */</div><div class="line"></div><div class="line">typedef CF_ENUM(int32_t, CGLineJoin) &#123;</div><div class="line">    kCGLineJoinMiter,</div><div class="line">    kCGLineJoinRound,</div><div class="line">    kCGLineJoinBevel</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>其中，第一个是默认的表示斜接，第二个是圆滑衔接，第三个是斜角连接。</p>
+<h5 id="画圆"><a href="#画圆" class="headerlink" title="画圆"></a>画圆</h5><hr>
+<p>我们可以使用+ bezierPathWithOvalInRect:方法来画圆，当我们传的rect参数是一下正方形时，画出来的就是圆。</p>
+<p>先看效果图：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_3.jpg?raw=true" alt="image"><br></div>
+
+<pre><code>
+- (void)drawCiclePath {
+  // 传的是正方形，因此就可以绘制出圆了
+  UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(20, 20, self.frame.size.width - 40, self.frame.size.width - 40)];
+
+  // 设置填充颜色
+  UIColor *fillColor = [UIColor greenColor];
+  [fillColor set];
+  [path fill];
+
+  // 设置画笔颜色
+  UIColor *strokeColor = [UIColor blueColor];
+  [strokeColor set];
+
+  // 根据我们设置的各个点连线
+  [path stroke];
+}
+</code></pre>
+
+<blockquote>
+<p>注意：要画圆，我们需要传的rect参数必须是正方形哦！</p>
+</blockquote>
+<h5 id="画椭圆"><a href="#画椭圆" class="headerlink" title="画椭圆"></a>画椭圆</h5><hr>
+<p>先看效果图：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_4.jpg?raw=true" alt="image"><br></div><br>前面我们已经画圆了，我们可以使用+ bezierPathWithOvalInRect:方法来画圆，当我们传的rect参数是一下正方形时，画出来的就是圆。那么我们要是不传正方形，那么绘制出来的就是椭圆了。<br><br><pre><code><br>// 画椭圆<br>- (void)drawOvalPath {<br>  // 传的是不是正方形，因此就可以绘制出椭圆圆了<br>  UIBezierPath <em>path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(20, 20, self.frame.size.width - 80, self.frame.size.height - 40)];<br><br>  // 设置填充颜色<br>  UIColor </em>fillColor = [UIColor greenColor];<br>  [fillColor set];<br>  [path fill];<br><br>  // 设置画笔颜色<br>  UIColor <em>strokeColor = [UIColor blueColor];<br>  [strokeColor set];<br><br>  // 根据我们设置的各个点连线<br>  [path stroke];<br>}<br></em></code></pre><br><br>##### 画带圆角的矩形<br>**<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)bezierPathWithRoundedRect:(CGRect)rect</div><div class="line">                            cornerRadius:(CGFloat)cornerRadius;</div><div class="line">+ (instancetype)bezierPathWithRoundedRect:(CGRect)rect</div><div class="line">                        byRoundingCorners:(UIRectCorner)corners </div><div class="line">                              cornerRadii:(CGSize)cornerRadii;</div></pre></td></tr></table></figure><br><br>第一个工厂方法是画矩形，但是这个矩形是可以画圆角的。第一个参数是矩形，第二个参数是圆角大小。<br>第二个工厂方法功能是一样的，但是可以指定某一个角画成圆角。像这种我们就可以很容易地给UIView扩展添加圆角的方法了。<br><br>四个都是圆角10：<br><div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_5.jpg?raw=true" alt="image"><br></div>
+
+<pre><code>
+- (void)drawRoundedRectPath {
+  UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(20, 20, self.frame.size.width - 40, self.frame.size.height - 40) cornerRadius:10];
+
+  // 设置填充颜色
+  UIColor *fillColor = [UIColor greenColor];
+  [fillColor set];
+  [path fill];
+
+  // 设置画笔颜色
+  UIColor *strokeColor = [UIColor blueColor];
+  [strokeColor set];
+
+  // 根据我们设置的各个点连线
+  [path stroke];
+}
+</code></pre>
+
+<p>如果要画只有一个角是圆角，那么我们就修改创建方法：</p>
+<pre><code>
+UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(20, 20, self.frame.size.width - 40, self.frame.size.height - 40) byRoundingCorners:UIRectCornerTopRight cornerRadii:CGSizeMake(20, 20)];
+</code></pre>
+
+<p>其中第一个参数一样是传了个矩形，第二个参数是指定在哪个方向画圆角，第三个参数是一个CGSize类型，用来指定水平和垂直方向的半径的大小。看下效果图：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_6.jpg?raw=true" alt="image"><br></div>
+
+<h5 id="画弧"><a href="#画弧" class="headerlink" title="画弧"></a>画弧</h5><hr>
+<p>画弧前，我们需要了解其参考系，如下图（图片来自网络）：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_7.jpg?raw=true" alt="image"><br></div>
+
+<pre><code>
+#define   kDegreesToRadians(degrees)  ((pi * degrees)/ 180)
+- (void)drawARCPath {
+  const CGFloat pi = 3.14159265359;
+
+  CGPoint center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
+  UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:center
+                                                      radius:100
+                                                  startAngle:0
+                                                    endAngle:kDegreesToRadians(135)
+                                                   clockwise:YES];
+
+  path.lineCapStyle = kCGLineCapRound;
+  path.lineJoinStyle = kCGLineJoinRound;
+  path.lineWidth = 5.0;
+
+  UIColor *strokeColor = [UIColor redColor];
+  [strokeColor set];
+
+  [path stroke];
+}
+</code></pre>
+
+<p>效果图如下：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_8.jpg?raw=true" alt="image"><br></div>
+
+<p>我们要明确一点，画弧参数startAngle和endAngle使用的是弧度，而不是角度，因此我们需要将常用的角度转换成弧度。对于效果图中，我们设置弧的中心为控件的中心，起点弧度为0，也就是正东方向，而终点是135度角的位置。如果设置的clockwise:YES是逆时针方向绘制，如果设置为NO，效果如下：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_9.jpg?raw=true" alt="image"><br></div>
+
+<p>这两者正好是相反的。</p>
+<h5 id="画二次贝塞尔曲线"><a href="#画二次贝塞尔曲线" class="headerlink" title="画二次贝塞尔曲线"></a>画二次贝塞尔曲线</h5><hr>
+<p>先来学习一下关于控制点，如下图（图片来自网络）：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_10.jpeg?raw=true" alt="image"><br></div><br>画二次贝塞尔曲线，是通过调用此方法来实现的：<br><br><pre><code>- (void)addQuadCurveToPoint:(CGPoint)endPoint controlPoint:(CGPoint)controlPoint<br></code></pre><br><br>参数说明：<br><br>endPoint：终端点<br><br>controlPoint：控制点，对于二次贝塞尔曲线，只有一个控制点<br><br>看效果图：<br><div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_11.jpg?raw=true" alt="image"><br></div>
+
+<pre><code>
+- (void)drawSecondBezierPath {
+  UIBezierPath *path = [UIBezierPath bezierPath];
+
+  // 首先设置一个起始点
+  [path moveToPoint:CGPointMake(20, self.frame.size.height - 100)];
+
+  // 添加二次曲线
+  [path addQuadCurveToPoint:CGPointMake(self.frame.size.width - 20, self.frame.size.height - 100)
+               controlPoint:CGPointMake(self.frame.size.width / 2, 0)];
+
+  path.lineCapStyle = kCGLineCapRound;
+  path.lineJoinStyle = kCGLineJoinRound;
+  path.lineWidth = 5.0;
+
+  UIColor *strokeColor = [UIColor redColor];
+  [strokeColor set];
+
+  [path stroke];
+}
+</code></pre>
+
+<p>画二次贝塞尔曲线的步骤：</p>
+<ol>
+<li>先设置一个起始点，也就是通过-moveToPoint:设置</li>
+<li>调用-addQuadCurveToPoint:controlPoint:方法设置终端点和控制点，以画二次曲线</li>
+</ol>
+<p>在效果图中，拱桥左边的起始点就是我们设置的起始点，最右边的终点，就是我们设置的终端点，而我们设置的控制点为（width / 2, 0）对应于红色矩形中水平方向在正中央，而垂直方向在最顶部。</p>
+<blockquote>
+<p>这个样式看起来很像sin或者cos函数吧？这两个只是特例而已，其实可以画任意图形，只是想不到，没有做不到的。</p>
+</blockquote>
+<h5 id="画三次贝塞尔曲线"><a href="#画三次贝塞尔曲线" class="headerlink" title="画三次贝塞尔曲线"></a>画三次贝塞尔曲线</h5><hr>
+<p>贝塞尔曲线必定通过首尾两个点，称为端点；中间两个点虽然未必要通过，但却起到牵制曲线形状路径的作用，称作控制点。关于三次贝塞尔曲线的控制器，看下图：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_12.jpeg?raw=true" alt="image"><br></div>
+
+<blockquote>
+<p>提示：其组成是起始端点+控制点1+控制点2+终止端点</p>
+</blockquote>
+<p>如下方法就是画三次贝塞尔曲线的关键方法，以三个点画一段曲线，一般和-moveToPoint:配合使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">- (void)addCurveToPoint:(CGPoint)endPoint </div><div class="line">          controlPoint1:(CGPoint)controlPoint1 </div><div class="line">          controlPoint2:(CGPoint)controlPoint2</div></pre></td></tr></table></figure>
+<p>看下效果图：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/UIBezierPath/UIBezierPath_13.jpg?raw=true" alt="image"><br></div>
+
+<p>实现代码是这样的：</p>
+<pre><code>
+- (void)drawThirdBezierPath {
+  UIBezierPath *path = [UIBezierPath bezierPath];
+
+  // 设置起始端点
+  [path moveToPoint:CGPointMake(20, 150)];
+
+  [path addCurveToPoint:CGPointMake(300, 150)
+          controlPoint1:CGPointMake(160, 0)
+          controlPoint2:CGPointMake(160, 250)];
+
+  path.lineCapStyle = kCGLineCapRound;
+  path.lineJoinStyle = kCGLineJoinRound;
+  path.lineWidth = 5.0;
+
+  UIColor *strokeColor = [UIColor redColor];
+  [strokeColor set];
+
+  [path stroke];
+}
+</code></pre>
+
+<p>我们需要注意，这里确定的起始端点为(20,150)，终止端点为(300, 150)，基水平方向是一致的。控制点1的坐标是（160，0），水平方向相当于在中间附近，这个参数可以调整。控制点2的坐标是（160，250），如果以两个端点的连线为水平线，那么就是250-150=100，也就是在水平线下100。这样看起来就像一个sin函数了。</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/01/22/UIBezierPath详解/" class="archive-article-date">
+  	<time datetime="2016-01-22T07:51:31.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-01-22</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UIBezierPath/">UIBezierPath</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-price-tags"></i>
+	<a class="article-category-link" href="/categories/动画/">动画</a>
+	</div>
+
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/01/24/ReactiveCocoa和RXSwift速查表/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          ReactiveCocoa和RXSwift速查表
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="UIBezierPath详解" data-title="UIBezierPath详解" data-url="http://yoursite.com/2016/01/22/UIBezierPath详解/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"masyang"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 马扬
+    	</div>
+      	
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">长相一般&lt;br&gt;技术一般&lt;br&gt;欢迎多多指点&lt;a href=&quot;mailto:mayang_email@sina.cn&quot;&gt;mayang_email@sina.cn&lt;/a&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

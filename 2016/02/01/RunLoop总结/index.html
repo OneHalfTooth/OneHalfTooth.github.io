@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>RunLoop总结 | 马扬的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近研究了一下RunLoop，在这里对RunLoop做一个总结，主要是对&amp;lt;CoreFoundation/CFRunLoop.h&amp;gt;的头文件函数总结。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RunLoop总结">
+<meta property="og:url" content="http://yoursite.com/2016/02/01/RunLoop总结/index.html">
+<meta property="og:site_name" content="马扬的博客">
+<meta property="og:description" content="最近研究了一下RunLoop，在这里对RunLoop做一个总结，主要是对&amp;lt;CoreFoundation/CFRunLoop.h&amp;gt;的头文件函数总结。">
+<meta property="og:updated_time" content="2016-09-28T02:28:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RunLoop总结">
+<meta name="twitter:description" content="最近研究了一下RunLoop，在这里对RunLoop做一个总结，主要是对&amp;lt;CoreFoundation/CFRunLoop.h&amp;gt;的头文件函数总结。">
+  
+    <link rel="alternative" href="/atom.xml" title="马扬的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//img/avatar.jpg">
+  
+  <script src="/style.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic" target="_blank">
+			
+			<img src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"">马扬</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">马扬的博客</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">友情链接</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+		        
+					<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+		        
+			</div>
+		</nav>
+	</header>
+</div>
+
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">马扬</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic">
+				
+					<img src="/img/avatar.jpg" class="js-avatar">
+				
+				</a>
+			<hgroup>
+			  <a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"><h1 class="header-author">马扬</h1></a>
+			</hgroup>
+			
+			<p class="header-subtitle">马扬的博客</p>
+			
+			<nav class="header-menu">
+      <ul>
+      
+      					<li><a href="/">主页</a></li>
+      		        
+      				</ul>
+      			</nav>
+      			<nav class="header-nav">
+      				<div class="social">
+      					
+      						<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+      			        
+      						<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+      			        
+      				</div>
+      			</nav>
+      		</header>
+      	</div>
+      </nav>
+
+      <div class="body-wrap">
+        <article id="post-RunLoop总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RunLoop总结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近研究了一下RunLoop，在这里对RunLoop做一个总结，主要是对<code>&lt;CoreFoundation/CFRunLoop.h&gt;</code>的头文件函数总结。</p>
+<a id="more"></a>
+<h3 id="关于RunLoop的资料总结"><a href="#关于RunLoop的资料总结" class="headerlink" title="关于RunLoop的资料总结"></a>关于RunLoop的资料总结</h3><p>网上关于RunLoop的总结大致相同，这里推荐几篇好的文章共大家学习。</p>
+<ul>
+<li><p>YYModel作者关于RunLoop的总结 《<a href="http://blog.ibireme.com/2015/05/18/runloop/" target="_blank" rel="external">深入理解RunLoop</a>》</p>
+</li>
+<li><p>简书上不错的文章 《<a href="http://www.jianshu.com/p/37ab0397fec7" target="_blank" rel="external">【iOS程序启动与运转】- RunLoop个人小结</a>》</p>
+</li>
+<li><p>sunnyxx的RunLoop线下讨论会 <a href="https://pan.baidu.com/s/1i5bN3dN" target="_blank" rel="external">百度网盘</a></p>
+</li>
+<li><p>用RunLoop捕获程序Crash 防止用户使用时程序崩溃 <a href="https://github.com/guiyongdong/Resource/tree/master/%20CrashManager" target="_blank" rel="external">git连接</a></p>
+</li>
+</ul>
+<h3 id="关于CFRunLoop-h的总结"><a href="#关于CFRunLoop-h的总结" class="headerlink" title="关于CFRunLoop.h的总结"></a>关于CFRunLoop.h的总结</h3><pre><code>
+
+//Runloop
+typedef struct __CFRunLoop * CFRunLoopRef;
+//事件源
+typedef struct __CFRunLoopSource * CFRunLoopSourceRef;
+//观察者
+typedef struct __CFRunLoopObserver * CFRunLoopObserverRef;
+//定时器
+typedef struct CF_BRIDGED_MUTABLE_TYPE(NSTimer) __CFRunLoopTimer * CFRunLoopTimerRef;
+
+/* Reasons for CFRunLoopRunInMode() to Return */
+enum {
+    kCFRunLoopRunFinished = 1, //Run Loop结束，没有Timer或者其他Input Source
+    kCFRunLoopRunStopped = 2, //Run Loop被停止，使用CFRunLoopStop停止Run Loop
+    kCFRunLoopRunTimedOut = 3, //RunLoop 超时
+    kCFRunLoopRunHandledSource = 4 //Run Loop处理完事件，注意Timer事件的触发是不会让Run Loop退出返回的，即使CFRunLoopRunInMode的第三个参数是YES也不行
+};
+
+/* Run Loop Observer Activities */
+typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {
+    kCFRunLoopEntry = (1UL << 0), // 即将进入Loop
+    kCFRunLoopBeforeTimers = (1UL << 1), // 即将处理 Timer
+    kCFRunLoopBeforeSources = (1UL << 2), // 即将处理 Source
+    kCFRunLoopBeforeWaiting = (1UL << 5), // 即将进入休眠
+    kCFRunLoopAfterWaiting = (1UL << 6), // 刚从休眠中唤醒
+    kCFRunLoopExit = (1UL << 7), // 即将退出Loop
+    kCFRunLoopAllActivities = 0x0FFFFFFFU
+};
+
+//默认model
+CF_EXPORT const CFStringRef kCFRunLoopDefaultMode;
+//当uiscrollView滑动时Model
+CF_EXPORT const CFStringRef kCFRunLoopCommonModes;
+
+//获取当前RunLoop 当当前RunLoop没有的时候回创建一个  一个线程对应一个RunLoop
+CF_EXPORT CFRunLoopRef CFRunLoopGetCurrent(void);
+//获取主线程的RunLoop
+CF_EXPORT CFRunLoopRef CFRunLoopGetMain(void);
+//复制当前RunLoop
+CF_EXPORT CFStringRef CFRunLoopCopyCurrentMode(CFRunLoopRef rl);
+//复制当前RunLoop的所有Model
+CF_EXPORT CFArrayRef CFRunLoopCopyAllModes(CFRunLoopRef rl);
+//给当前RunLoop添加Model
+CF_EXPORT void CFRunLoopAddCommonMode(CFRunLoopRef rl, CFStringRef mode);
+//获取RunLoop model的超时时间
+CF_EXPORT CFAbsoluteTime CFRunLoopGetNextTimerFireDate(CFRunLoopRef rl, CFStringRef mode);
+//手动启动RunLoop
+CF_EXPORT void CFRunLoopRun(void);
+/**
+ *  切换当前RunLoop的model
+ *
+ *  @param mode                     model
+ *  @param seconds                  执行时间
+ *  @param returnAfterSourceHandled 执行完是否结束
+ */
+CF_EXPORT SInt32 CFRunLoopRunInMode(CFStringRef mode, CFTimeInterval seconds, Boolean returnAfterSourceHandled);
+//当前RunLoop是否休眠
+CF_EXPORT Boolean CFRunLoopIsWaiting(CFRunLoopRef rl);
+//唤醒RunLoop
+CF_EXPORT void CFRunLoopWakeUp(CFRunLoopRef rl);
+//手动停止RunLoop
+CF_EXPORT void CFRunLoopStop(CFRunLoopRef rl);
+
+#if __BLOCKS__
+//在RunLoop 特定Model执行 操作
+CF_EXPORT void CFRunLoopPerformBlock(CFRunLoopRef rl, CFTypeRef mode, void (^block)(void)) CF_AVAILABLE(10_6, 4_0); 
+#endif
+//RunLoop下是否包含某个Source
+CF_EXPORT Boolean CFRunLoopContainsSource(CFRunLoopRef rl, CFRunLoopSourceRef source, CFStringRef mode);
+//添加Source
+CF_EXPORT void CFRunLoopAddSource(CFRunLoopRef rl, CFRunLoopSourceRef source, CFStringRef mode);
+//移除Source
+CF_EXPORT void CFRunLoopRemoveSource(CFRunLoopRef rl, CFRunLoopSourceRef source, CFStringRef mode);
+//是否包换观察者
+CF_EXPORT Boolean CFRunLoopContainsObserver(CFRunLoopRef rl, CFRunLoopObserverRef observer, CFStringRef mode);
+//添加某个model下的观察者
+CF_EXPORT void CFRunLoopAddObserver(CFRunLoopRef rl, CFRunLoopObserverRef observer, CFStringRef mode);
+//移除观察者
+CF_EXPORT void CFRunLoopRemoveObserver(CFRunLoopRef rl, CFRunLoopObserverRef observer, CFStringRef mode);
+//是否包含定时器
+CF_EXPORT Boolean CFRunLoopContainsTimer(CFRunLoopRef rl, CFRunLoopTimerRef timer, CFStringRef mode);
+//添加定时器
+CF_EXPORT void CFRunLoopAddTimer(CFRunLoopRef rl, CFRunLoopTimerRef timer, CFStringRef mode);
+//移除定时器
+CF_EXPORT void CFRunLoopRemoveTimer(CFRunLoopRef rl, CFRunLoopTimerRef timer, CFStringRef mode);
+
+typedef struct {
+    CFIndex    version;
+    void *    info;
+    const void *(*retain)(const void *info);
+    void    (*release)(const void *info);
+    CFStringRef    (*copyDescription)(const void *info);
+    Boolean    (*equal)(const void *info1, const void *info2);
+    CFHashCode    (*hash)(const void *info);
+    void    (*schedule)(void *info, CFRunLoopRef rl, CFStringRef mode);
+    void    (*cancel)(void *info, CFRunLoopRef rl, CFStringRef mode);
+    void    (*perform)(void *info);
+} CFRunLoopSourceContext;
+
+typedef struct {
+    CFIndex    version;
+    void *    info;
+    const void *(*retain)(const void *info);
+    void    (*release)(const void *info);
+    CFStringRef    (*copyDescription)(const void *info);
+    Boolean    (*equal)(const void *info1, const void *info2);
+    CFHashCode    (*hash)(const void *info);
+#if (TARGET_OS_MAC && !(TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) || (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)
+    mach_port_t    (*getPort)(void *info);
+    void *    (*perform)(void *msg, CFIndex size, CFAllocatorRef allocator, void *info);
+#else
+    void *    (*getPort)(void *info);
+    void    (*perform)(void *info);
+#endif
+} CFRunLoopSourceContext1;
+
+CF_EXPORT CFTypeID CFRunLoopSourceGetTypeID(void);
+
+//创建事件源
+CF_EXPORT CFRunLoopSourceRef CFRunLoopSourceCreate(CFAllocatorRef allocator, CFIndex order, CFRunLoopSourceContext *context);
+
+CF_EXPORT CFIndex CFRunLoopSourceGetOrder(CFRunLoopSourceRef source);
+CF_EXPORT void CFRunLoopSourceInvalidate(CFRunLoopSourceRef source);
+CF_EXPORT Boolean CFRunLoopSourceIsValid(CFRunLoopSourceRef source);
+CF_EXPORT void CFRunLoopSourceGetContext(CFRunLoopSourceRef source, CFRunLoopSourceContext *context);
+CF_EXPORT void CFRunLoopSourceSignal(CFRunLoopSourceRef source);
+
+typedef struct {
+    CFIndex    version;
+    void *    info;
+    const void *(*retain)(const void *info);
+    void    (*release)(const void *info);
+    CFStringRef    (*copyDescription)(const void *info);
+} CFRunLoopObserverContext;
+
+typedef void (*CFRunLoopObserverCallBack)(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info);
+
+CF_EXPORT CFTypeID CFRunLoopObserverGetTypeID(void);
+
+CF_EXPORT CFRunLoopObserverRef CFRunLoopObserverCreate(CFAllocatorRef allocator, CFOptionFlags activities, Boolean repeats, CFIndex order, CFRunLoopObserverCallBack callout, CFRunLoopObserverContext *context);
+#if __BLOCKS__
+/**
+ *  创建观察者
+ *
+ *  @param allocator  默认 kCFAllocatorDefault
+ *  @param activities 监听 RunLoop的哪种状态
+ *  @param repeats    是否一直监听
+ *  @param order      优先级 默认 0
+ *  @param ^block     回调
+ *
+ */
+CF_EXPORT CFRunLoopObserverRef CFRunLoopObserverCreateWithHandler(CFAllocatorRef allocator, CFOptionFlags activities, Boolean repeats, CFIndex order, void (^block) (CFRunLoopObserverRef observer, CFRunLoopActivity activity)) CF_AVAILABLE(10_7, 5_0);
+#endif
+
+//获取当前观察者观察的状态
+CF_EXPORT CFOptionFlags CFRunLoopObserverGetActivities(CFRunLoopObserverRef observer);
+//获取当前观察者是否一直观察
+CF_EXPORT Boolean CFRunLoopObserverDoesRepeat(CFRunLoopObserverRef observer);
+//获取优先级
+CF_EXPORT CFIndex CFRunLoopObserverGetOrder(CFRunLoopObserverRef observer);
+CF_EXPORT void CFRunLoopObserverInvalidate(CFRunLoopObserverRef observer);
+CF_EXPORT Boolean CFRunLoopObserverIsValid(CFRunLoopObserverRef observer);
+CF_EXPORT void CFRunLoopObserverGetContext(CFRunLoopObserverRef observer, CFRunLoopObserverContext *context);
+
+typedef struct {
+    CFIndex    version;
+    void *    info;
+    const void *(*retain)(const void *info);
+    void    (*release)(const void *info);
+    CFStringRef    (*copyDescription)(const void *info);
+} CFRunLoopTimerContext;
+
+typedef void (*CFRunLoopTimerCallBack)(CFRunLoopTimerRef timer, void *info);
+
+CF_EXPORT CFTypeID CFRunLoopTimerGetTypeID(void);
+//创建定时器
+CF_EXPORT CFRunLoopTimerRef CFRunLoopTimerCreate(CFAllocatorRef allocator, CFAbsoluteTime fireDate, CFTimeInterval interval, CFOptionFlags flags, CFIndex order, CFRunLoopTimerCallBack callout, CFRunLoopTimerContext *context);
+#if __BLOCKS__
+//使用Block创建定时器
+CF_EXPORT CFRunLoopTimerRef CFRunLoopTimerCreateWithHandler(CFAllocatorRef allocator, CFAbsoluteTime fireDate, CFTimeInterval interval, CFOptionFlags flags, CFIndex order, void (^block) (CFRunLoopTimerRef timer)) CF_AVAILABLE(10_7, 5_0);
+#endif
+//获取超时时间
+CF_EXPORT CFAbsoluteTime CFRunLoopTimerGetNextFireDate(CFRunLoopTimerRef timer);
+//设置超时时间
+CF_EXPORT void CFRunLoopTimerSetNextFireDate(CFRunLoopTimerRef timer, CFAbsoluteTime fireDate);
+CF_EXPORT CFTimeInterval CFRunLoopTimerGetInterval(CFRunLoopTimerRef timer);
+//是否循环执行
+CF_EXPORT Boolean CFRunLoopTimerDoesRepeat(CFRunLoopTimerRef timer);
+//获取优先级
+CF_EXPORT CFIndex CFRunLoopTimerGetOrder(CFRunLoopTimerRef timer);
+CF_EXPORT void CFRunLoopTimerInvalidate(CFRunLoopTimerRef timer);
+CF_EXPORT Boolean CFRunLoopTimerIsValid(CFRunLoopTimerRef timer);
+CF_EXPORT void CFRunLoopTimerGetContext(CFRunLoopTimerRef timer, CFRunLoopTimerContext *context);
+
+// Setting a tolerance for a timer allows it to fire later than the scheduled fire date, improving the ability of the system to optimize for increased power savings and responsiveness. The timer may fire at any time between its scheduled fire date and the scheduled fire date plus the tolerance. The timer will not fire before the scheduled fire date. For repeating timers, the next fire date is calculated from the original fire date regardless of tolerance applied at individual fire times, to avoid drift. The default value is zero, which means no additional tolerance is applied. The system reserves the right to apply a small amount of tolerance to certain timers regardless of the value of this property.
+// As the user of the timer, you will have the best idea of what an appropriate tolerance for a timer may be. A general rule of thumb, though, is to set the tolerance to at least 10% of the interval, for a repeating timer. Even a small amount of tolerance will have a significant positive impact on the power usage of your application. The system may put a maximum value of the tolerance.
+CF_EXPORT CFTimeInterval CFRunLoopTimerGetTolerance(CFRunLoopTimerRef timer) CF_AVAILABLE(10_9, 7_0);
+CF_EXPORT void CFRunLoopTimerSetTolerance(CFRunLoopTimerRef timer, CFTimeInterval tolerance) CF_AVAILABLE(10_9, 7_0);
+
+CF_EXTERN_C_END
+CF_IMPLICIT_BRIDGING_DISABLED
+
+
+</code></pre>
+
+
+
+
+
+
+<!-- more -->
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/02/01/RunLoop总结/" class="archive-article-date">
+  	<time datetime="2016-02-01T09:05:52.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-02-01</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RunLoop/">RunLoop</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-price-tags"></i>
+	<a class="article-category-link" href="/categories/RunLoop/">RunLoop</a>
+	</div>
+
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/02/08/iOS动画之CATransition动画/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          iOS动画之CATransition动画
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/24/ReactiveCocoa和RXSwift速查表/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ReactiveCocoa和RXSwift速查表</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="RunLoop总结" data-title="RunLoop总结" data-url="http://yoursite.com/2016/02/01/RunLoop总结/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"masyang"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 马扬
+    	</div>
+      	
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">长相一般&lt;br&gt;技术一般&lt;br&gt;欢迎多多指点&lt;a href=&quot;mailto:mayang_email@sina.cn&quot;&gt;mayang_email@sina.cn&lt;/a&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

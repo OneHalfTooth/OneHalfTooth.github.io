@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>iOS动画篇之UIView动画 | 马扬的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="UIKit直接将动画集成到UIView类中，当内部的一些属性发生改变时，UIView将为这些改变提供动画支持。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS动画篇之UIView动画">
+<meta property="og:url" content="http://yoursite.com/2016/03/04/iOS动画篇-transfrom/index.html">
+<meta property="og:site_name" content="马扬的博客">
+<meta property="og:description" content="UIKit直接将动画集成到UIView类中，当内部的一些属性发生改变时，UIView将为这些改变提供动画支持。">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_26.gif?raw=true">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_27.gif?raw=true">
+<meta property="og:updated_time" content="2016-09-28T02:29:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS动画篇之UIView动画">
+<meta name="twitter:description" content="UIKit直接将动画集成到UIView类中，当内部的一些属性发生改变时，UIView将为这些改变提供动画支持。">
+<meta name="twitter:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_26.gif?raw=true">
+  
+    <link rel="alternative" href="/atom.xml" title="马扬的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//img/avatar.jpg">
+  
+  <script src="/style.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic" target="_blank">
+			
+			<img src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"">马扬</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">马扬的博客</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">友情链接</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+		        
+					<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+		        
+			</div>
+		</nav>
+	</header>
+</div>
+
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">马扬</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic">
+				
+					<img src="/img/avatar.jpg" class="js-avatar">
+				
+				</a>
+			<hgroup>
+			  <a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"><h1 class="header-author">马扬</h1></a>
+			</hgroup>
+			
+			<p class="header-subtitle">马扬的博客</p>
+			
+			<nav class="header-menu">
+      <ul>
+      
+      					<li><a href="/">主页</a></li>
+      		        
+      				</ul>
+      			</nav>
+      			<nav class="header-nav">
+      				<div class="social">
+      					
+      						<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+      			        
+      						<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+      			        
+      				</div>
+      			</nav>
+      		</header>
+      	</div>
+      </nav>
+
+      <div class="body-wrap">
+        <article id="post-iOS动画篇-transfrom" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS动画篇之UIView动画
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>UIKit直接将动画集成到UIView类中，当内部的一些属性发生改变时，UIView将为这些改变提供动画支持。<br><a id="more"></a></p>
+<h4 id="UIViewAnimationOptions参考"><a href="#UIViewAnimationOptions参考" class="headerlink" title="UIViewAnimationOptions参考"></a>UIViewAnimationOptions参考</h4><pre><code>
+1.基本类型
+UIViewAnimationOptionLayoutSubviews：动画过程中保证子视图跟随运动。
+UIViewAnimationOptionAllowUserInteraction：动画过程中允许用户交互。
+UIViewAnimationOptionBeginFromCurrentState：所有视图从当前状态开始运行。
+UIViewAnimationOptionRepeat：重复运行动画。
+UIViewAnimationOptionAutoreverse ：动画运行到结束点后仍然以动画方式回到初始点。
+UIViewAnimationOptionOverrideInheritedDuration：忽略嵌套动画时间设置。
+UIViewAnimationOptionOverrideInheritedCurve：忽略嵌套动画速度设置。
+UIViewAnimationOptionAllowAnimatedContent：动画过程中重绘视图（注意仅仅适用于转场动画）。  
+UIViewAnimationOptionShowHideTransitionViews：视图切换时直接隐藏旧视图、显示新视图，而不是将旧视图从父视图移除（仅仅适用于转场动画）
+UIViewAnimationOptionOverrideInheritedOptions ：不继承父动画设置或动画类型。
+
+2.动画速度控制（可从其中选择一个设置）
+UIViewAnimationOptionCurveEaseInOut：动画先缓慢，然后逐渐加速。
+UIViewAnimationOptionCurveEaseIn ：动画逐渐变慢。
+UIViewAnimationOptionCurveEaseOut：动画逐渐加速。
+UIViewAnimationOptionCurveLinear ：动画匀速执行，默认值。
+
+3.转场类型（仅适用于转场动画设置，可以从中选择一个进行设置，基本动画、关键帧动画不需要设置）
+UIViewAnimationOptionTransitionNone：没有转场动画效果。
+UIViewAnimationOptionTransitionFlipFromLeft ：从左侧翻转效果。
+UIViewAnimationOptionTransitionFlipFromRight：从右侧翻转效果。
+UIViewAnimationOptionTransitionCurlUp：向后翻页的动画过渡效果。    
+UIViewAnimationOptionTransitionCurlDown ：向前翻页的动画过渡效果。    
+UIViewAnimationOptionTransitionCrossDissolve：旧视图溶解消失显示下一个新视图的效果。    
+UIViewAnimationOptionTransitionFlipFromTop ：从上方翻转效果。    
+UIViewAnimationOptionTransitionFlipFromBottom：从底部翻转效果。
+</code></pre>
+
+
+<h3 id="1-基本动画"><a href="#1-基本动画" class="headerlink" title="1. 基本动画"></a>1. 基本动画</h3><p><code>+ (void)animateWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^ __nullable)(BOOL finished))completion</code></p>
+<ul>
+<li><strong>参数详情:</strong></li>
+</ul>
+<pre><code>
+duration   :   持续时间  
+delay      :   延迟执行  
+options    :   动画选项(往复、循环等)  
+animations :   动画block  
+completion :   完成后的block 
+</code></pre>
+
+<ul>
+<li><strong>可实现动画的属性</strong></li>
+</ul>
+<pre><code>
+坐标尺寸类: bounds、frame、center  
+视图显示类: backgroundColor、alpha、hidden  
+形态变化类: transform
+</code></pre>
+
+<h3 id="2-弹簧动画"><a href="#2-弹簧动画" class="headerlink" title="2.弹簧动画"></a>2.弹簧动画</h3><p><code>+ (void)animateWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay usingSpringWithDamping:(CGFloat)dampingRatio initialSpringVelocity:(CGFloat)velocity options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^ __nullable)(BOOL finished))completion</code></p>
+<ul>
+<li><strong>参数详情:</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">usingSpringWithDamping   :   0.0 ~ 1.0 阻尼比例，数值越小「弹簧」的振动效果越明显</div><div class="line">initialSpringVelocity    :   初始的速度，数值越大一开始移动越快</div></pre></td></tr></table></figure>
+<h3 id="3-过渡动画"><a href="#3-过渡动画" class="headerlink" title="3.过渡动画"></a>3.过渡动画</h3><p><code>+ (void)transitionWithView:(UIView *)view duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^ __nullable)(void))animations completion:(void (^ __nullable)(BOOL finished))completion</code></p>
+<ul>
+<li><strong>参数详情:</strong></li>
+</ul>
+<pre><code>
+view       :   需要进行转场动画的视图
+options    :   转场动画的类型
+</code></pre>
+
+<p><code>+ (void)transitionFromView:(UIView *)fromView toView:(UIView *)toView duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^ __nullable)(BOOL finished))completion</code></p>
+<ul>
+<li><strong>参数详情:</strong></li>
+</ul>
+<pre><code>
+方法调用完毕后，相当于执行了下面两句代码：
+// 添加toView到父视图
+[fromView.superview addSubview:toView];
+// 把fromView从父视图中移除
+[fromView removeFromSuperview];
+</code></pre>
+
+<h3 id="4-keyframe动画"><a href="#4-keyframe动画" class="headerlink" title="4. keyframe动画"></a>4. keyframe动画</h3><p><code>+ (void)animateKeyframesWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay options:(UIViewKeyframeAnimationOptions)options animations:(void (^)(void))animations completion:(void (^ __nullable)(BOOL finished))completion</code></p>
+<p><code>+ (void)addKeyframeWithRelativeStartTime:(double)frameStartTime relativeDuration:(double)frameDuration animations:(void (^)(void))animations</code></p>
+<ul>
+<li><strong>参数详情:</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RelativeStartTime : 关键帧动画开始时间的比例值</div><div class="line">RelativeDuration  : 关键帧动画持续实践的比例值</div></pre></td></tr></table></figure>
+<ul>
+<li><strong>用法示例:</strong></li>
+</ul>
+<pre><code>
+[UIView animateKeyframesWithDuration:8 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
+        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.25 animations:^{
+            self.imgV.center = (CGPoint){center.x + 200 ,center.y + 150};
+        }];
+        [UIView addKeyframeWithRelativeStartTime:0.25 relativeDuration:0.25 animations:^{
+            self.imgV.center = (CGPoint){center.x ,center.y + 300};
+        }];
+        [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.25 animations:^{
+            self.imgV.center = (CGPoint){center.x + 200,center.y + 450};
+        }];
+        [UIView addKeyframeWithRelativeStartTime:0.75 relativeDuration:0.25 animations:^{
+            self.imgV.center = (CGPoint){center.x + 0,center.y + 600 };
+        }];
+    } completion:nil];
+</code></pre>
+
+<h3 id="5-transform变换"><a href="#5-transform变换" class="headerlink" title="5. transform变换"></a>5. transform变换</h3><p><code>CGAffineTransform</code></p>
+<ul>
+<li><strong>变换原理</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">struct CGAffineTransform &#123;</div><div class="line">   CGFloat a;</div><div class="line">   CGFloat b;</div><div class="line">   CGFloat c;</div><div class="line">   CGFloat d;</div><div class="line">   CGFloat tx;</div><div class="line">   CGFloat ty;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>结构体矩阵图为：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_26.gif?raw=true" alt="矩阵图"><br></div>
+
+<p>因为最后一列总是是(0,0,1)，所以有用的信息就是前面两列<br>对一个view进行仿射变化就相当于对view上的每个点做一个乘法<br>结果就是：</p>
+<div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_27.gif?raw=true" alt="映射变换"><br></div>
+
+<p><strong>相当于：</strong><br>(x, y, 1 ) –&gt; (ax + cy + tx, bx + dy + ty, 1) </p>
+<p>如果不看c和b的话<br>a表示x水平方向的缩放，tx表示x水平方向的偏移<br>d表示y垂直方向的缩放，ty表示y垂直方向的偏移<br>如果b和c不为零的话，那么视图肯定发生了旋转</p>
+<p><strong>常量</strong><br>CGAffineTransformIdentity<br>CGAffineTransform<br>CGAffineTransformIdentity;<br>这个就是没有变化的最初的样子 </p>
+<ul>
+<li><strong>常用函数</strong></li>
+</ul>
+<pre><code>
+/// 用来连接两个变换效果并返回。返回的t = t1 * t2
+CGAffineTransformConcat(CGAffineTransform t1, CGAffineTransform t2)
+
+/// 矩阵初始值。[ 1 0 0 1 0 0 ]
+CGAffineTransformIdentity
+
+/// 自定义矩阵变换，需要掌握矩阵变换的知识才知道怎么用。参照(x, y, 1 ) --> (ax + cy + tx, bx + dy + ty, 1)  
+CGAffineTransformMake(CGFloat a, CGFloat b, CGFloat c, CGFloat d, CGFloat tx, CGFloat ty)
+
+/// 旋转视图。传入参数为 角度 * (M_PI / 180)。等同于 CGAffineTransformRotate(self.transform, angle)
+CGAffineTransformMakeRotation(CGFloat angle)
+CGAffineTransformRotate(CGAffineTransform t, CGFloat angle)
+
+/// 缩放视图。等同于CGAffineTransformScale(self.transform, sx, sy)
+CGAffineTransformMakeScale(CGFloat sx, CGFloat sy)
+CGAffineTransformScale(CGAffineTransform t, CGFloat sx, CGFloat sy)
+
+/// 缩放视图。等同于CGAffineTransformTranslate(self.transform, tx, ty)
+CGAffineTransformMakeTranslation(CGFloat tx, CGFloat ty)
+CGAffineTransformTranslate(CGAffineTransform t, CGFloat tx, CGFloat ty)
+</code></pre>
+
+<ul>
+<li><strong>常用函数</strong></li>
+</ul>
+<pre><code>
+- (void)viewDidAppear:(BOOL)animated {
+    CGFloat offset = self.label1.frame.size.height * 0.5;
+
+    self.label1.transform = CGAffineTransformConcat(
+                                                    CGAffineTransformMakeScale(1, 0),
+                                                    CGAffineTransformMakeTranslation(0, -offset));
+
+    self.label1.alpha = 0;
+    [UIView animateWithDuration:3.0 animations:^{
+        self.label1.transform = CGAffineTransformIdentity;
+        self.label1.alpha = 1;
+
+        self.label2.transform = CGAffineTransformConcat(
+                                                        CGAffineTransformMakeScale(1, 0.1),
+                                                        CGAffineTransformMakeTranslation(0, offset));
+        self.label2.alpha = 0;
+    }];
+}
+</code></pre>
+
+
+<h3 id="6-UIView动画（首尾方式）"><a href="#6-UIView动画（首尾方式）" class="headerlink" title="6.UIView动画（首尾方式）"></a>6.UIView动画（首尾方式）</h3><p>UIKit直接将动画集成到UIView类中，当内部的一些属性发生改变时，UIView将为这些改变提供动画支持<br>执行动画所需要的工作由UIView类自动完成，但仍要在希望执行动画时通知视图，为此需要将改变属性的代码放在[UIView beginAnimations:nil context:nil]和[UIView commitAnimations]之间</p>
+<p>常见方法解析:<br>　　<strong>+ (void)setAnimationDelegate:(id)delegate</strong>     设置动画代理对象，当动画开始或者结束时会发消息给代理对象<br>　　<strong>+ (void)setAnimationWillStartSelector:(SEL)selector</strong>   当动画即将开始时，执行delegate对象的selector，并且把beginAnimations:context:中传入的参数传进selector<br>　　<strong>+ (void)setAnimationDidStopSelector:(SEL)selector</strong>  当动画结束时，执行delegate对象的selector，并且把beginAnimations:context:中传入的参数传进selector<br>　　<strong>+ (void)setAnimationDuration:(NSTimeInterval)duration</strong>   动画的持续时间，秒为单位<br>　　<strong>+ (void)setAnimationDelay:(NSTimeInterval)delay</strong>  动画延迟delay秒后再开始<br>　　<strong>+ (void)setAnimationStartDate:(NSDate *)startDate</strong>   动画的开始时间，默认为now<br>　　<strong>+ (void)setAnimationCurve:(UIViewAnimationCurve)curve</strong>  动画的节奏控制<br>　　<strong>+ (void)setAnimationRepeatCount:(float)repeatCount</strong>  动画的重复次数<br>　　<strong>+ (void)setAnimationRepeatAutoreverses:(BOOL)repeatAutoreverses</strong>  如果设置为YES,代表动画每次重复执行的效果会跟上一次相反<br>　　<strong>+ (void)setAnimationTransition:(UIViewAnimationTransition)transition forView:(UIView *)view cache:(BOOL)cache</strong>  设置视图view的过渡效果, transition指定过渡类型, cache设置YES代表使用视图缓存，性能较好</p>
+<p><strong>代码示例: </strong></p>
+<pre><code>
+@interface ViewController ()
+@property (weak, nonatomic) IBOutlet UIView *customView;
+
+
+@end
+
+@implementation YYViewController
+
+- (void)viewDidLoad
+{
+     [super viewDidLoad];
+
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+     //打印动画块的位置
+     NSLog(@"动画执行之前的位置：%@",NSStringFromCGPoint(self.customView.center));
+
+     //首尾式动画
+     [UIView beginAnimations:nil context:nil];
+     //执行动画
+     //设置动画执行时间
+     [UIView setAnimationDuration:2.0];
+     //设置代理
+     [UIView setAnimationDelegate:self];
+     //设置动画执行完毕调用的事件
+     [UIView setAnimationDidStopSelector:@selector(didStopAnimation)];
+     self.customView.center=CGPointMake(200, 300);
+     [UIView commitAnimations];
+
+}
+
+-(void)didStopAnimation
+{
+     NSLog(@"动画执行完毕");
+     //打印动画块的位置
+     NSLog(@"动画执行之后的位置：%@",NSStringFromCGPoint(self.customView.center));
+}
+@end
+</code></pre>
+
+<p><strong>说明:</strong><br>　　使用UIView和CALayer都能实现动画效果，但是在真实的开发中，一般还是主要使用UIView封装的动画，而很少使用CALayer的动画。</p>
+<p>CALayer核心动画与UIView动画的区别：<br>　　<strong>UIView封装的动画执行完毕之后不会反弹。即如果是通过CALayer核心动画改变layer的位置状态，表面上看虽然已经改变了，但是实际上它的位置是没有改变的。</strong></p>
+<h3 id="7-补充"><a href="#7-补充" class="headerlink" title="7.补充"></a>7.补充</h3><h5 id="UIImageView的帧动画"><a href="#UIImageView的帧动画" class="headerlink" title="UIImageView的帧动画"></a>UIImageView的帧动画</h5><p>UIImageView可以让一系列的图片在特定的时间内按顺序显示</p>
+<p>相关属性解析:<br>　　<strong>animationImages</strong>：要显示的图片(一个装着UIImage的NSArray)<br>　　<strong>animationDuration</strong>：完整地显示一次animationImages中的所有图片所需的时间<br>　　<strong>animationRepeatCount</strong>：动画的执行次数(默认为0，代表无限循环)</p>
+<p>相关方法解析:<br>　　<strong>- (void)startAnimating</strong>; 开始动画<br>　　<strong>- (void)stopAnimating</strong>;  停止动画<br>　　<strong>- (BOOL)isAnimating</strong>;  是否正在运行动画</p>
+<h5 id="UIActivityIndicatorView"><a href="#UIActivityIndicatorView" class="headerlink" title="UIActivityIndicatorView"></a>UIActivityIndicatorView</h5><p>是一个旋转进度轮，可以用来告知用户有一个操作正在进行中，一般用initWithActivityIndicatorStyle初始化</p>
+<p>相关方法解析:<br>　　<strong>- (void)startAnimating</strong>; 开始动画<br>　　<strong>- (void)stopAnimating</strong>;  停止动画<br>　　<strong>- (BOOL)isAnimating</strong>;  是否正在运行动画</p>
+<p>UIActivityIndicatorViewStyle有3个值可供选择：<br>　　<strong>UIActivityIndicatorViewStyleWhiteLarge</strong>   //大型白色指示器<br>　　<strong>UIActivityIndicatorViewStyleWhite</strong>      //标准尺寸白色指示器<br>　　<strong>UIActivityIndicatorViewStyleGray</strong>    //灰色指示器，用于白色背景</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/03/04/iOS动画篇-transfrom/" class="archive-article-date">
+  	<time datetime="2016-03-04T03:38:37.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-03-04</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/动画/">动画</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-price-tags"></i>
+	<a class="article-category-link" href="/categories/动画/">动画</a>
+	</div>
+
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/03/12/深入ReactiveCocoa/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          深入ReactiveCocoa
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/02/27/iOS动画篇之CoreAnimation动画/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS动画篇之CoreAnimation动画</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS动画篇-transfrom" data-title="iOS动画篇之UIView动画" data-url="http://yoursite.com/2016/03/04/iOS动画篇-transfrom/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"masyang"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 马扬
+    	</div>
+      	
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">长相一般&lt;br&gt;技术一般&lt;br&gt;欢迎多多指点&lt;a href=&quot;mailto:mayang_email@sina.cn&quot;&gt;mayang_email@sina.cn&lt;/a&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

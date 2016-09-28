@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>聊一聊GCD的那些事 | 马扬的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="GCD是iOS开发中经常使用到的技术，最近工作比较悠闲，有时间对GCD做一个全面的学习，这篇文章将对GCD做一个全面的解析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊一聊GCD的那些事">
+<meta property="og:url" content="http://yoursite.com/2016/04/15/聊一聊GCD的那些事/index.html">
+<meta property="og:site_name" content="马扬的博客">
+<meta property="og:description" content="GCD是iOS开发中经常使用到的技术，最近工作比较悠闲，有时间对GCD做一个全面的学习，这篇文章将对GCD做一个全面的解析。">
+<meta property="og:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/GCD1.png?raw=true">
+<meta property="og:updated_time" content="2016-09-28T02:29:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="聊一聊GCD的那些事">
+<meta name="twitter:description" content="GCD是iOS开发中经常使用到的技术，最近工作比较悠闲，有时间对GCD做一个全面的学习，这篇文章将对GCD做一个全面的解析。">
+<meta name="twitter:image" content="https://github.com/guiyongdong/Resource/blob/master/hexoImage/GCD1.png?raw=true">
+  
+    <link rel="alternative" href="/atom.xml" title="马扬的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//img/avatar.jpg">
+  
+  <script src="/style.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic" target="_blank">
+			
+			<img src="/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"">马扬</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">马扬的博客</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">友情链接</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+		        
+					<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+		        
+			</div>
+		</nav>
+	</header>
+</div>
+
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">马扬</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" class="profilepic">
+				
+					<img src="/img/avatar.jpg" class="js-avatar">
+				
+				</a>
+			<hgroup>
+			  <a href="http://www.masyang.com/html/PersonalProfile/html/PersonalProfile.html" target="_blank"><h1 class="header-author">马扬</h1></a>
+			</hgroup>
+			
+			<p class="header-subtitle">马扬的博客</p>
+			
+			<nav class="header-menu">
+      <ul>
+      
+      					<li><a href="/">主页</a></li>
+      		        
+      				</ul>
+      			</nav>
+      			<nav class="header-nav">
+      				<div class="social">
+      					
+      						<a class="github" target="_blank" href="https://github.com/OneHalfTooth" title="github">github</a>
+      			        
+      						<a class="mail" target="_blank" href="mailto:mailmayang_email@sina.cn" title="mail">mail</a>
+      			        
+      				</div>
+      			</nav>
+      		</header>
+      	</div>
+      </nav>
+
+      <div class="body-wrap">
+        <article id="post-聊一聊GCD的那些事" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      聊一聊GCD的那些事
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>GCD是iOS开发中经常使用到的技术，最近工作比较悠闲，有时间对GCD做一个全面的学习，这篇文章将对GCD做一个全面的解析。</p>
+<a id="more"></a>
+<p><strong>目录</strong></p>
+<blockquote>
+<ol>
+<li>文字描述</li>
+<li>Dispatch Queue</li>
+<li>dispatch_sync&amp;dispatch_async</li>
+<li>创建的线程任务有四种执行方式</li>
+<li>Dispatch Group</li>
+<li>Dispatch Block</li>
+<li>dispatch_after</li>
+<li>dispatch_apply</li>
+<li>dispatch_once</li>
+<li>dispatch_barrier_async</li>
+<li>dispatch_set_target_queue</li>
+<li>dispatch_semaphore_t(信号量)</li>
+<li>GCD定时器</li>
+</ol>
+</blockquote>
+<h3 id="1-文字描述"><a href="#1-文字描述" class="headerlink" title="1. 文字描述"></a>1. 文字描述</h3><blockquote>
+<p>GCD英文全称：Grand Central Dispatch 翻译就是 宏大的中央调度，是苹果开发的一种支持并行操作的机制,基于C语言，提供了非常多强大的函数</p>
+</blockquote>
+<p>在了解GCD并使用之前，必须要掌握四个名词：<strong>串行</strong>，<strong>并发</strong>，<strong>同步</strong>，<strong>异步</strong></p>
+<p><strong>串行(Serial)：</strong><br>一个任务执行完, 再执行下一个任务</p>
+<p><strong>并发 (Concurrent)：</strong><br>多个任务同时执行(自动开启多个线程),只有在异步函数下才有效</p>
+<p><strong>同步(Synchronous)：</strong><br>在当前线程中执行任务，不具备开启新线程的能力<br>提交的任务在执行完成后才会返回<br>同步函数: dispatch_sync()</p>
+<p><strong>异步 (Asynchronous)：</strong><br>在新的线程中执行任务, 具备开启线程的能力<br>在新线程中执行任务，具备开启新线程的能力<br>提交的任务立刻返回，在后台队列中执行<br>异步函数: dispatch_async()</p>
+<hr>
+<h3 id="2-Dispatch-Queue"><a href="#2-Dispatch-Queue" class="headerlink" title="2.Dispatch Queue"></a>2.Dispatch Queue</h3><p>Dispatch Queue是执行处理的等待队列, 按照先进先出(FIFO, First-In-First-Out)的顺序进行任务处理.<br>开发者将需要执行的任务添加到合适的Dispatch Queue中即可，Dispatch Queue会根据任务添加的顺序先到先执行，其中有以下几种队列：</p>
+<p>另外, 队列分两种, 一种是<strong>串行队列(Serial Dispatch Queue)</strong>, 一种是<strong>并行队列(Concurrent Dispatch Queue)</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Dispatch Queue的种类</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Serial Dispatch Queue</td>
+<td style="text-align:center">等待现在执行中处理结束</td>
+</tr>
+<tr>
+<td>Concurrent Dispatch Queue</td>
+<td style="text-align:center">不等待现在执行中处理结束</td>
+</tr>
+</tbody>
+</table>
+<pre><code>
+//创建一个串行队列
+dispatch_queue_t serialQueue=dispatch_queue_create("com.serial.queue", DISPATCH_QUEUE_SERIAL);
+
+//创建一个并发队列
+dispatch_queue_t concurrentQueue=dispatch_queue_create("com.concurrent.queue", DISPATCH_QUEUE_CONCURRENT);
+
+//第一个参数为队列名，第二个参数为队列类型，当然，第二个参数人如果写NULL，创建出来的也是一个串行队列。然后我们在异步线程来执行这个队列：
+</code></pre>
+
+<p>另外系统为我们准备了两个队列</p>
+<ul>
+<li><p><strong>main dispatch queue</strong><br>功能跟主线程一样，通过dispatch_get_main_queue()来获取，提交到main queue的任务实际上都是在主线程执行的，所以这是一个串行队列<br><code>dispatch_queue_t queue = dispatch_get_main_queue();</code></p>
+</li>
+<li><p><strong>global dispatch queues</strong><br>系统给每个应用提供四个全局的并发队列，这四个队列分别有不同的优先级：高、默认、低以及后台，用户不能去创建全局队列，只能根据优先级去获取:</p>
+<pre><code>dispatch_queue_t queue  = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</code></pre>    
+
+
+
+</li>
+</ul>
+<hr>
+<h3 id="3-dispatch-sync-amp-dispatch-async"><a href="#3-dispatch-sync-amp-dispatch-async" class="headerlink" title="3.dispatch_sync&amp;dispatch_async"></a>3.dispatch_sync&amp;dispatch_async</h3><p>执行队列中任务的两种方式，dispatch_sync是同步任务，dispatch_async是异步任务</p>
+<p>1.<strong>用同步的方式执行任务(同步：synchronization)</strong>， 只能在当前线程中执行任务，不具备开启新线程的能力</p>
+<pre><code>/*
+ *  第一个参数：该任务所在的队列
+ *  第二个参数：该任务要做的事情
+ */
+dispatch_sync(dispatch_queue_t queue, dispatch_block_t block);</code></pre>
+
+<ul>
+<li><p>假如我指定的队列A是串行队列，则该队列中只能有一个线程，也就是说我放在队列A中的任务，所以必须得一个一个的执行。不仅如此，在上面我们还手动选择了在队列A中用同步的方式执行任务，这也限制了，队列中的任务只能一个一个执行。</p>
+</li>
+<li><p>假如我指定的队列A是并行队列，则该队列中可以开辟多个线程去执行任务，虽然如此，但由于我们在上面手动选择了在队列A中用同步的方式执行线程，所以队列A中的任务也只能一个一个去执行，<strong>不能开辟多线程同时执行</strong>。</p>
+</li>
+</ul>
+<p>2.用异步的方式执行任务(异步：asynchronous)，可以在新的线程中执行任务，具备开启新线程的能力。</p>
+<pre><code>dispatch_async(dispatch_queue_t queue, dispatch_block_t block);</code></pre>
+
+<ul>
+<li>假如此时我指定的队列B是并行队列，则表明该队列中可以存在多个线程，又因为我们采用的是异步的方式执行任务，所以在这个队列的任务可以实现同时运行。</li>
+<li>假如此时我指定的队列B是串行队列，则表明该队列中，只能有一个线程，所以尽管我采用异步的方式执行任务，但该队列中的任务还是只能一个一个的运行。</li>
+</ul>
+<hr>
+<h3 id="4-创建的线程任务有四种执行方式"><a href="#4-创建的线程任务有四种执行方式" class="headerlink" title="4.创建的线程任务有四种执行方式"></a>4.创建的线程任务有四种执行方式</h3><p><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/GCD1.png?raw=true" alt=""></p>
+<h5 id="1-串行队列同步执行任务"><a href="#1-串行队列同步执行任务" class="headerlink" title="1. 串行队列同步执行任务"></a>1. 串行队列同步执行任务</h5><ul>
+<li>同步不具有开辟新线程的能力，不会开辟新的线程去执行任务，会在当前程序的主线程中执行任务。</li>
+<li>按照串行的方式去执行任务</li>
+</ul>
+<pre><code>-(void)syncSERIAL{
+    NSLog(@"star");
+    //不会开辟新的线程
+    dispatch_queue_t queue=dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_SERIAL);
+    dispatch_sync(queue, ^{
+        NSLog(@"SERIAL_work_1 ");
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"SERIAL_work_2 ");
+    });
+    dispatch_sync(queue, ^{
+        NSLog(@"SERIAL_work_3 ");
+    });
+
+    NSLog(@"end");
+
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-20 20:08:09.695 GCD_Demo[8196:1029563] star
+2016-07-20 20:08:09.696 GCD_Demo[8196:1029563] SERIAL_work_1 
+2016-07-20 20:08:09.696 GCD_Demo[8196:1029563] SERIAL_work_2 
+2016-07-20 20:08:09.696 GCD_Demo[8196:1029563] SERIAL_work_3 
+2016-07-20 20:08:09.696 GCD_Demo[8196:1029563] end</code></pre>
+
+<p><strong>由于是同步操作，不能开辟线程，所以都是在主线程并按照顺序执行</strong></p>
+<h5 id="2-串行队列异步执行任务"><a href="#2-串行队列异步执行任务" class="headerlink" title="2. 串行队列异步执行任务"></a>2. 串行队列异步执行任务</h5><ul>
+<li>异步具有创建新线程的能力，会开辟新的线程去执行任务</li>
+<li>按照串行的方式去执行任务</li>
+</ul>
+<pre><code>-(void)asyncSERIAL{
+    NSLog(@"star");
+
+    //会开辟新的线程,但是是串行执行任务
+    dispatch_queue_t queue=dispatch_queue_create("ki", DISPATCH_QUEUE_SERIAL);
+    dispatch_async(queue, ^{
+        [NSThread sleepForTimeInterval:3];
+        NSLog(@"SERIAL_work_1 ");
+    });
+    dispatch_async(queue, ^{
+        [NSThread sleepForTimeInterval:2];
+        NSLog(@"SERIAL_work_2 ");
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"SERIAL_work_3 ");
+    });
+
+    NSLog(@"end");
+
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-20 20:09:58.494 GCD_Demo[8213:1031268] star
+2016-07-20 20:09:58.495 GCD_Demo[8213:1031268] end
+2016-07-20 20:10:01.496 GCD_Demo[8213:1031315] SERIAL_work_1 
+2016-07-20 20:10:03.502 GCD_Demo[8213:1031315] SERIAL_work_2 
+2016-07-20 20:10:03.502 GCD_Demo[8213:1031315] SERIAL_work_3</code></pre>
+
+<p><strong>因为是异步操作，所以有个编号为2的子线程被开辟，但有因为是串行队列，所以只开辟了一个线程。最终造就了三个任务顺序执行。</strong></p>
+<h5 id="3-并行队列同步执行任务"><a href="#3-并行队列同步执行任务" class="headerlink" title="3. 并行队列同步执行任务"></a>3. 并行队列同步执行任务</h5><ul>
+<li>同步不具有创建新线程的能力，不会开辟新的线程去执行任务，会在当前程序的主线程去执行任务</li>
+<li>按照同步的方式去执行任务</li>
+</ul>
+<pre><code>-(void)syncCONCURRENT{
+  NSLog(@"star");
+  //不会开辟新的线程
+  //串行执行命令
+  dispatch_queue_t queue=dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_CONCURRENT);
+  dispatch_sync(queue, ^{
+      [NSThread sleepForTimeInterval:3];
+      NSLog(@"CONCURRENT_work_1 ");
+  });
+  dispatch_sync(queue, ^{
+      [NSThread sleepForTimeInterval:2];
+      NSLog(@"CONCURRENT_work_2 ");
+  });
+  dispatch_sync(queue, ^{
+      NSLog(@"CONCURRENT_work_3 ");
+  });
+
+  NSLog(@"end");
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-20 20:13:03.753 GCD_Demo[8232:1033759] star
+2016-07-20 20:13:06.755 GCD_Demo[8232:1033759] CONCURRENT_work_1 
+2016-07-20 20:13:08.756 GCD_Demo[8232:1033759] CONCURRENT_work_2 
+2016-07-20 20:13:08.756 GCD_Demo[8232:1033759] CONCURRENT_work_3 
+2016-07-20 20:13:08.757 GCD_Demo[8232:1033759] end</code></pre>
+
+<p><strong>虽然并行队列决定了该队列中可以有多个线程，但由于是同步操作，不能开辟线程，所以还都是在主线程中按顺序执行。</strong></p>
+<h5 id="4-并发队列异步执行任务-常用"><a href="#4-并发队列异步执行任务-常用" class="headerlink" title="4. 并发队列异步执行任务(常用)"></a>4. 并发队列异步执行任务(常用)</h5><ul>
+<li>异步具有创建新线程的能力，会开辟新的线程去执行任务，不会在当前程序的主线程去执行任务</li>
+<li>按照并发的方式去执行任务</li>
+</ul>
+<pre><code>-(void)asyncCONCURRENT{
+  NSLog(@"star");
+
+  //一个队列 为 每个任务开辟一个线程
+  dispatch_queue_t queue=dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_CONCURRENT);
+  dispatch_async(queue, ^{
+      [NSThread sleepForTimeInterval:3];
+      NSLog(@"CONCURRENT_work_1 ");
+  });
+  dispatch_async(queue, ^{
+      [NSThread sleepForTimeInterval:2];
+      NSLog(@"CONCURRENT_work_2 ");
+  });
+  dispatch_async(queue, ^{
+      NSLog(@"CONCURRENT_work_3 ");
+  });
+
+  NSLog(@"end");
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-20 20:18:26.768 GCD_Demo[8256:1038143] star
+2016-07-20 20:18:26.768 GCD_Demo[8256:1038143] end
+2016-07-20 20:18:26.769 GCD_Demo[8256:1038192] CONCURRENT_work_3 
+2016-07-20 20:18:28.771 GCD_Demo[8256:1038179] CONCURRENT_work_2 
+2016-07-20 20:18:29.773 GCD_Demo[8256:1038188] CONCURRENT_work_1</code></pre>
+
+<p><strong>并行队列可以里可以有多个线程，同步执行的方式又可以开辟多个线程，所以这里实现了多个线程并行执行。</strong></p>
+<hr>
+<h3 id="5-Dispatch-Group"><a href="#5-Dispatch-Group" class="headerlink" title="5.Dispatch Group"></a>5.Dispatch Group</h3><p>当我们想在gcd queue中所有的任务执行完毕之后做些特定事情的时候，也就是队列的同步问题，如果队列是串行的话，那将该操作最后添加到队列中即可，但如果队列是并行队列的话，这时候就可以利用dispatch_group来实现了，dispatch_group能很方便的解决同步的问题。dispatch_group_create可以创建一个group对象，然后可以添加block到该组里面，下面看下它的一些用法：</p>
+<ul>
+<li><p>dispatch_group_notify<br>  是通过异步的方式通知，所以，不会阻塞线程</p>
+<pre><code>-(void)asyncGroupNotify
+{
+NSLog(@"star");
+dispatch_group_t group=dispatch_group_create();
+dispatch_queue_t queue=dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_CONCURRENT);
+dispatch_group_async(group, queue, ^{
+    [NSThread sleepForTimeInterval:1];
+    NSLog(@"group_work_1");
+});
+dispatch_group_async(group, queue, ^{
+    [NSThread sleepForTimeInterval:6];
+    NSLog(@"group_work_2");
+});
+dispatch_group_async(group, queue, ^{
+    [NSThread sleepForTimeInterval:2];
+    NSLog(@"group_work_3");
+});
+
+dispatch_group_notify(group, queue, ^{
+    NSLog(@"dispatch_group_Notify 结束");
+});
+}</code></pre>
+
+</li>
+</ul>
+<p>运行结果</p>
+<pre><code>2016-07-21 13:51:40.600 GCD_Demo[9044:1162213] star
+2016-07-21 13:51:41.605 GCD_Demo[9044:1162359] group_work_1
+2016-07-21 13:51:42.608 GCD_Demo[9044:1162389] group_work_3
+2016-07-21 13:51:46.603 GCD_Demo[9044:1162349] group_work_2
+2016-07-21 13:51:46.605 GCD_Demo[9044:1162349] dispatch_group_Notify 结束</code></pre>
+
+<ul>
+<li>dispatch_group_wait<br>  会阻塞当前线程，知道任务都完成时才会继续执行下面的代码</li>
+</ul>
+<pre><code>-(void)asyncGroupWait
+{
+    NSLog(@"star");
+    dispatch_group_t group=dispatch_group_create();
+    dispatch_queue_t queue=dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_group_async(group, queue, ^{
+        [NSThread sleepForTimeInterval:1];
+        NSLog(@"group_work_1");
+    });
+    dispatch_group_async(group, queue, ^{
+        [NSThread sleepForTimeInterval:6];
+        NSLog(@"group_work_2");
+    });
+    dispatch_group_async(group, queue, ^{
+        [NSThread sleepForTimeInterval:2];
+        NSLog(@"group_work_3");
+    });
+
+    //在此设置了一个12秒的等待时间，如果group的执行结束没有到12秒那么就返回0
+    //如果执行group的执行时间超过了12秒，那么返回非0 数值，
+    //在使用dispatch_group_wait函数的时候，会阻塞当前线程，阻塞的时间 在wait函数时间值和当前group执行时间值取最小的。
+    long kk=dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, 12 * NSEC_PER_SEC));
+    if(kk==0)
+    {
+         NSLog(@"dispatch_group_wait 结果1");
+    }
+    else
+    {
+         NSLog(@"dispatch_group_wait 结果2");
+    }
+
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-21 13:56:47.471 GCD_Demo[9065:1165380] star
+2016-07-21 13:56:48.472 GCD_Demo[9065:1165494] group_work_1
+2016-07-21 13:56:49.476 GCD_Demo[9065:1165502] group_work_3
+2016-07-21 13:56:53.475 GCD_Demo[9065:1165485] group_work_2
+2016-07-21 13:56:53.475 GCD_Demo[9065:1165380] dispatch_group_wait 结果1</code></pre>
+
+<ul>
+<li>dispatch_group_enter&amp;dispatch_group_leave<br>  假如我们不想使用dispatch_group_async异步的将任务丢到group中去执行，这时候就需要用到dispatch_group_enter跟dispatch_group_leave方法，这两个方法要配对出现，以下这两种方法是等价的：</li>
+</ul>
+<pre><code>-(void)asyncGroupEnter
+{
+  // 群组－统一监控一组任务
+  dispatch_group_t group = dispatch_group_create();
+
+  dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
+
+  // 1> 入组 -> 之后的 block 会被 group 监听
+  // dispatch_group_enter 一定和 dispatch_group_leave 要配对出现
+  dispatch_group_enter(group);
+  dispatch_async(queue, ^{
+      NSLog(@"dispatch_async_work1");
+
+      // block 的末尾，所有任务执行完毕后，添加一个出组
+      dispatch_group_leave(group);
+  });
+
+  //  再次入组
+  dispatch_group_enter(group);
+  dispatch_async(queue, ^{
+      [NSThread sleepForTimeInterval:6];
+
+      NSLog(@"dispatch_async_work1");
+
+      // block 的末尾，所有任务执行完毕后，添加一个出组
+      dispatch_group_leave(group);
+  });
+
+  // 群组结束
+  dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+      NSLog(@"OVER");
+  });  
+  NSLog(@"come here");
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-21 15:21:40.707 GCD_Demo[9256:1205427] come here
+2016-07-21 15:21:40.707 GCD_Demo[9256:1205465] dispatch_async_work1
+2016-07-21 15:21:46.709 GCD_Demo[9256:1205460] dispatch_async_work1
+2016-07-21 15:21:46.710 GCD_Demo[9256:1205427] OVER</code></pre>
+
+
+
+<hr>
+<h3 id="6-Dispatch-Block"><a href="#6-Dispatch-Block" class="headerlink" title="6. Dispatch Block"></a>6. Dispatch Block</h3><p>添加到gcd队列中执行的任务是以block的形式添加的，block封装了需要执行功能，block带来的开发效率提升就不说了，gcd跟block可以说是一对好基友，能够很好的配合使用。</p>
+<pre><code>-(void)dispatchBlock
+{
+    dispatch_queue_t queue = dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_SERIAL);
+    dispatch_block_t block=dispatch_block_create(0, ^{
+        NSLog(@"dispatchBlock_work");
+    });
+
+    dispatch_sync(queue, block);
+}</code></pre>
+
+<h5 id="1-dispatch-block-wait"><a href="#1-dispatch-block-wait" class="headerlink" title="1.dispatch_block_wait"></a>1.dispatch_block_wait</h5><p>当需要等待前面的任务执行完毕时，我们可以使用dispatch_block_wait这个接口，设置等待时间DISPATCH_TIME_FOREVER会一直等待直到前面的任务完成.用法跟dispatch_group_wait类似</p>
+<pre><code>-(void)dispatchBlockWait
+{
+    dispatch_queue_t queue = dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_SERIAL);
+    dispatch_block_t block = dispatch_block_create(0, ^{
+        NSLog(@"before sleep");
+        [NSThread sleepForTimeInterval:6];
+        NSLog(@"after sleep");
+    });
+    dispatch_async(queue, block);
+    //等待前面的任务执行完毕
+    long kk=dispatch_block_wait(block, dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC));
+    if(kk==0)
+    {
+        NSLog(@"coutinue");
+    }
+    else
+    {
+        NSLog(@"timeOut！！！");
+    }
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-21 16:28:38.313 GCD_Demo[9533:1251011] before sleep
+2016-07-21 16:28:41.314 GCD_Demo[9533:1250971] timeOut！！！
+2016-07-21 16:28:44.318 GCD_Demo[9533:1251011] after sleep</code></pre>
+
+<h5 id="2-dispatch-block-notify"><a href="#2-dispatch-block-notify" class="headerlink" title="2.dispatch_block_notify"></a>2.dispatch_block_notify</h5><p>dispatch_block_notify当观察的某个block执行结束之后立刻通知提交另一特定的block到指定的queue中执行，该函数有三个参数，第一参数是需要观察的block，第二个参数是被通知block提交执行的queue，第三参数是当需要被通知执行的block</p>
+<pre><code>-(void)dispatchBlockNotify
+{
+    dispatch_queue_t queue = dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_SERIAL);
+    dispatch_block_t previousBlock = dispatch_block_create(0, ^{
+        NSLog(@"previousBlock begin");
+        [NSThread sleepForTimeInterval:2];
+        NSLog(@"previousBlock done");
+    });
+    dispatch_async(queue, previousBlock);
+    dispatch_block_t notifyBlock = dispatch_block_create(0, ^{
+        NSLog(@"notifyBlock");
+    });
+    //当previousBlock执行完毕后，提交notifyBlock到global queue中执行
+    dispatch_block_notify(previousBlock, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), notifyBlock);
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-21 16:38:19.756 GCD_Demo[9664:1261328] previousBlock begin
+2016-07-21 16:38:21.762 GCD_Demo[9664:1261328] previousBlock done
+2016-07-21 16:38:21.762 GCD_Demo[9664:1261329] notifyBlock</code></pre>
+
+<h5 id="3-dispatch-block-cancel"><a href="#3-dispatch-block-cancel" class="headerlink" title="3. dispatch_block_cancel"></a>3. dispatch_block_cancel</h5><p>可以取消提交到队列的block</p>
+<pre><code>-(void)dispatchBlockCancel
+{
+    dispatch_queue_t queue = dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_block_t block1 = dispatch_block_create(0, ^{
+        NSLog(@"block1 begin");
+        [NSThread sleepForTimeInterval:1];
+        NSLog(@"block1 done");
+    });
+    dispatch_block_t block2 = dispatch_block_create(0, ^{
+        NSLog(@"block2 ");
+    });
+    dispatch_async(queue, block1);
+    dispatch_async(queue, block2);
+    dispatch_block_cancel(block2);
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-21 16:50:28.140 GCD_Demo[9723:1272259] block1 begin
+2016-07-21 16:50:29.144 GCD_Demo[9723:1272259] block1 done</code></pre>
+
+
+<hr>
+<h3 id="7-dispatch-after"><a href="#7-dispatch-after" class="headerlink" title="7.dispatch_after"></a>7.dispatch_after</h3><p>来延迟执行的GCD方法，因为在主线程中我们不能用sleep来延迟方法的调用，所以用它是最合适的，我们做一个简单的例子：</p>
+<pre><code>-(void)dispatchAfter
+{
+    NSLog(@"dispatchAfter_star");
+    int64_t time=2*NSEC_PER_SEC;
+
+    dispatch_queue_t mainQueue=dispatch_get_main_queue();
+
+        for (int i=0; i<5; i++)="" {="" dispatch_time_t="" distime="dispatch_time(DISPATCH_TIME_NOW," time*i);="" dispatch_after(distime,="" mainqueue,="" ^{="" nslog(@"dispatchafter_work");="" });="" }="" }<="" code=""></5;></code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-21 16:12:07.204 GCD_Demo[9439:1237251] dispatchAfter_star
+2016-07-21 16:12:07.211 GCD_Demo[9439:1237251] dispatchAfter_work
+2016-07-21 16:12:09.398 GCD_Demo[9439:1237251] dispatchAfter_work
+2016-07-21 16:12:11.205 GCD_Demo[9439:1237251] dispatchAfter_work
+2016-07-21 16:12:13.205 GCD_Demo[9439:1237251] dispatchAfter_work
+2016-07-21 16:12:15.205 GCD_Demo[9439:1237251] dispatchAfter_work</code></pre>
+
+
+<hr>
+<h3 id="8-dispatch-apply"><a href="#8-dispatch-apply" class="headerlink" title="8.dispatch_apply"></a>8.dispatch_apply</h3><p>dispatch_apply类似一个for循环，会在指定的dispatch queue中运行block任务n次，如果队列是并发队列，则会并发执行block任务，dispatch_apply是一个同步调用，block任务执行n次后才返回。</p>
+<pre><code>-(void)dispatchApply
+{
+    dispatch_queue_t queue = dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_CONCURRENT);
+
+
+    dispatch_apply(6, queue, ^(size_t i) {
+        NSLog(@"do a job %zu times",i);
+
+    });
+    NSLog(@"go on");
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-21 17:04:54.558 GCD_Demo[9831:1284549] do a job 0 times
+2016-07-21 17:04:54.564 GCD_Demo[9831:1284583] do a job 1 times
+2016-07-21 17:04:54.564 GCD_Demo[9831:1284589] do a job 2 times
+2016-07-21 17:04:54.564 GCD_Demo[9831:1284593] do a job 3 times
+2016-07-21 17:04:54.564 GCD_Demo[9831:1284549] do a job 4 times
+2016-07-21 17:04:54.564 GCD_Demo[9831:1284583] do a job 5 times
+2016-07-21 17:04:54.566 GCD_Demo[9831:1284549] go on</code></pre>
+
+
+<hr>
+<h3 id="9-dispatch-once"><a href="#9-dispatch-once" class="headerlink" title="9.dispatch_once"></a>9.dispatch_once</h3><p>整个程序运行中只会执行一次，使用dispatch_once可以简化代码并且彻底保证线程安全，开发者根本无须担心加锁或者同步。所有问题都由GCD在底层处理。由于每次调用时都必须使用完全相同的标记，所以标记要声明成static。所以用在单例模式上是最好的</p>
+<pre><code>static SingletonTimer * instance;
+static dispatch_once_t onceToken;
+dispatch_once(&onceToken, ^{
+    instance = [[SingletonTimer alloc] init];
+});
+
+return instance;</code></pre>
+
+
+<hr>
+<h3 id="10-dispatch-barrier-async"><a href="#10-dispatch-barrier-async" class="headerlink" title="10. dispatch_barrier_async"></a>10. dispatch_barrier_async</h3><p>dispatch_barrier_async用于等待前面的任务执行完毕后自己才执行，而它后面的任务需等待它完成之后才执行。一个典型的例子就是数据的读写，通常为了防止文件读写导致冲突，我们会创建一个串行的队列，所有的文件操作都是通过这个队列来执行，比如FMDB，这样就可以避免读写冲突。不过其实这样效率是有提升的空间的，当没有更新数据时，读操作其实是可以并行进行的，而写操作需要串行的执行</p>
+<pre><code>-(void)diapatchBarrier
+{
+    dispatch_queue_t queue = dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_CONCURRENT);
+
+    dispatch_async(queue, ^{
+        [NSThread sleepForTimeInterval:6];
+        NSLog(@"dispatch_async_work1");
+    });
+    dispatch_async(queue, ^{
+        [NSThread sleepForTimeInterval:2];
+        NSLog(@"dispatch_async_work2");
+    });
+    dispatch_barrier_async(queue, ^{
+        NSLog(@"dispatch_async_work3");
+        [NSThread sleepForTimeInterval:1];
+
+    });
+    dispatch_async(queue, ^{
+        [NSThread sleepForTimeInterval:1];
+        NSLog(@"dispatch_async_work4");
+    });
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-21 15:54:24.402 GCD_Demo[9354:1225160] dispatch_async_work2
+2016-07-21 15:54:28.403 GCD_Demo[9354:1225152] dispatch_async_work1
+2016-07-21 15:54:28.403 GCD_Demo[9354:1225152] dispatch_async_work3
+2016-07-21 15:54:30.412 GCD_Demo[9354:1225152] dispatch_async_work4</code></pre>
+
+
+<hr>
+<h3 id="11-dispatch-set-target-queue"><a href="#11-dispatch-set-target-queue" class="headerlink" title="11.dispatch_set_target_queue"></a>11.dispatch_set_target_queue</h3><p>1.系统的Global Queue是可以指定优先级的，那我们可以用到dispatch_set_target_queue这个方法来指定自己创建队列的优先级</p>
+<pre><code>-(void)DispatchSet
+{
+    dispatch_queue_t serialDiapatchQueue=dispatch_queue_create("com.GCD_demo.www", DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_t dispatchgetglobalqueue=dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
+    dispatch_set_target_queue(serialDiapatchQueue, dispatchgetglobalqueue);
+    dispatch_async(serialDiapatchQueue, ^{
+        NSLog(@"我优先级低，先让让");
+    });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSLog(@"我优先级高,我先block");
+    });
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-21 17:22:02.512 GCD_Demo[9902:1297023] 我优先级高,我先block
+2016-07-21 17:22:02.512 GCD_Demo[9902:1297035] 我优先级低，先让让</code></pre>
+
+<p>2.dispatch_set_target_queue除了能用来设置队列的优先级之外，还能够创建队列的层次体系，当我们想让不同队列中的任务同步的执行时，我们可以创建一个串行队列，然后将这些队列的target指向新创建的队列即可</p>
+<pre><code>-(void)dispatchSet2
+{
+    dispatch_queue_t targetQueue = dispatch_queue_create("target_queue", DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_t queue1 = dispatch_queue_create("queue1", DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_t queue2 = dispatch_queue_create("queue2", DISPATCH_QUEUE_CONCURRENT);
+
+
+    dispatch_set_target_queue(queue1, targetQueue);
+    dispatch_set_target_queue(queue2, targetQueue);
+
+    dispatch_async(queue1, ^{
+        [NSThread sleepForTimeInterval:3.f];
+        NSLog(@"do job1");
+
+    });
+    dispatch_async(queue2, ^{
+        [NSThread sleepForTimeInterval:2.f];
+        NSLog(@"do job2");
+
+    });
+    dispatch_async(queue2, ^{
+        [NSThread sleepForTimeInterval:1.f];
+        NSLog(@"do job3");
+
+    });
+}</code></pre>
+
+<p>执行结果</p>
+<pre><code>2016-07-21 17:28:54.327 GCD_Demo[10043:1303853] do job1
+2016-07-21 17:28:56.331 GCD_Demo[10043:1303853] do job2
+2016-07-21 17:28:57.335 GCD_Demo[10043:1303853] do job3</code></pre>
+
+
+<hr>
+<h3 id="12-dispatch-semaphore-t"><a href="#12-dispatch-semaphore-t" class="headerlink" title="12.dispatch_semaphore_t"></a>12.dispatch_semaphore_t</h3><p>信号量是一种老式的线程概念，由非常谦卑的 Edsger W. Dijkstra 介绍给世界。信号量之所以比较复杂是因为它建立在操作系统的复杂性之上。</p>
+<pre><code>- (void)downloadImageURLWithString:(NSString *)URLString
+{
+    // 1
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+    NSURL *url = [NSURL URLWithString:URLString];
+    __unused Photo *photo = [[Photo alloc]
+                             initwithURL:url
+                             withCompletionBlock:^(UIImage *image, NSError *error) {
+                                 if (error) {
+                                     XCTFail(@"%@ failed. %@", URLString, error);
+                                 }
+
+                                 // 2
+                                 dispatch_semaphore_signal(semaphore);
+                             }];
+
+    // 3
+    dispatch_time_t timeoutTime = dispatch_time(DISPATCH_TIME_NOW, kDefaultTimeoutLengthInNanoSeconds);
+    if (dispatch_semaphore_wait(semaphore, timeoutTime)) {
+        XCTFail(@"%@ timed out", URLString);
+    }
+}</code></pre>
+
+<p>下面来说明你代码中的信号量是如何工作的：</p>
+<ol>
+<li>创建一个信号量。参数指定信号量的起始值。这个数字是你可以访问的信号量，不需要有人先去增加它的数量。（注意到增加信号量也被叫做发射信号量）。译者注：这里初始化为0，也就是说，有人想使用信号量必然会被阻塞，直到有人增加信号量。</li>
+<li>在 Completion Block 里你告诉信号量你不再需要资源了。这就会增加信号量的计数并告知其他想使用此资源的线程。</li>
+<li>这会在超时之前等待信号量。这个调用阻塞了当前线程直到信号量被发射。这个函数的一个非零返回值表示到达超时了。在这个例子里，测试将会失败因为它以为网络请求不会超过 10 秒钟就会返回——一个平衡点！</li>
+</ol>
+<hr>
+<h3 id="13-GCD定时器"><a href="#13-GCD定时器" class="headerlink" title="13.GCD定时器"></a>13.GCD定时器</h3><p>基于以前讲的runloop中的CFRunLoopTimerRef :</p>
+<ul>
+<li>CFRunLoopTimerRef是基于时间的触发器</li>
+<li>CFRunLoopTimerRef基本上说的就是NSTimer,它受RunLoop的Mode的影响(Tracking,Defalult)</li>
+<li>GCD的定时器不受RunLoop中Mode的影响(RunLoop内部也是基于GCD实现的,可以根据源码看到), 比如滚动TableView的时候,GCD的定时器不受影响</li>
+<li>一般NSTimer不是特别准, NSTimer是在RunLoop中, RunLoop要处理各种东西(source,timer,observe),有时导致NSTimer不是特别准</li>
+</ul>
+<p>GCD定时器算是一个源(source),类型是Timer</p>
+<pre><code>-(void)startTime{
+    __block int timeout=30; //倒计时时间
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
+
+    dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
+    dispatch_source_set_event_handler(_timer, ^{
+        if(timeout=0){ //倒计时结束，关闭
+            dispatch_source_cancel(_timer);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //倒计时时间结束，回到主线程 根据自己需求设置
+
+            });
+        }else{
+            //            int minutes = timeout / 60;
+            int seconds = timeout % 60;
+            NSString *strTime = [NSString stringWithFormat:@"%.2d", seconds];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //设置界面的按钮显示 根据自己需求设置
+                NSLog(@"____%@",strTime);
+                [l_timeButton setTitle:[NSString stringWithFormat:@"%@秒后重新发送",strTime] forState:UIControlStateNormal];
+                l_timeButton.userInteractionEnabled = NO;
+
+            });
+            timeout--;
+
+        }
+    });
+    dispatch_resume(_timer);
+
+}</code></pre>
+
+
+
+
+
+
+<!-- more -->
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/04/15/聊一聊GCD的那些事/" class="archive-article-date">
+  	<time datetime="2016-04-15T08:56:07.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-04-15</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCD/">GCD</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-price-tags"></i>
+	<a class="article-category-link" href="/categories/GCD/">GCD</a>
+	</div>
+
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/04/23/关于RAC的一些资料/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          关于RAC的一些资料
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/11/聊一聊NSOperation的那些事/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">聊一聊NSOperation的那些事</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="聊一聊GCD的那些事" data-title="聊一聊GCD的那些事" data-url="http://yoursite.com/2016/04/15/聊一聊GCD的那些事/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"masyang"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 马扬
+    	</div>
+      	
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">长相一般&lt;br&gt;技术一般&lt;br&gt;欢迎多多指点&lt;a href=&quot;mailto:mayang_email@sina.cn&quot;&gt;mayang_email@sina.cn&lt;/a&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
