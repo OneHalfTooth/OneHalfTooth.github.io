@@ -145,7 +145,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>昨天的<strong><a href="http://www.masyang.com/2016/01/22/runtime之NSArray、NSDictionary安全/" target="_blank" rel="external">博文:runtime之NSArray安全</a></strong>已经介绍了有关通过<font color="red"> Swizzing </font>使NSArray安全的操作,那么今天我们来谈一下相对繁琐的使用Swizzing让NSMutableArray安全的操作.<small>PS:文笔不行,望海涵</small></p>
+        <p>昨天的<strong><a href="http://www.masyang.com/2016/01/22/runtime之NSArray、NSDictionary安全/">博文:runtime之NSArray安全</a></strong>已经介绍了有关通过<font color="red"> Swizzing </font>使NSArray安全的操作,那么今天我们来谈一下相对繁琐的使用Swizzing让NSMutableArray安全的操作.<small>PS:文笔不行,望海涵</small></p>
    <a id="more"></a>  
 <p><strong><a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">demo地址 : https://github.com/OneHalfTooth/Runtime_Safe</a></strong></p>
 <h2 id="用到的方法"><a href="#用到的方法" class="headerlink" title="用到的方法"></a>用到的方法</h2><font color="green"><br>//得到类的实例方法的实现 返回值为Method类型</font><br><strong>1、</strong> class_getInstanceMethod(Class cls, SEL name)<br><br><font color="green"> //得到类的类方法的实现 返回值为Method类型</font><br><strong>2、</strong> class_getClassMethod(Class cls, SEL name)<br><br><font color="green"> //交换方法m1 和方法m2的实现</font><br><strong>3、</strong> method_exchangeImplementations(Method m1, Method m2)<br><br><font color="green"> /*就像Application有生命周期回调方法一样,在Objective-C的类被加载和初始化的时候的回调方法,可以使用 Method Swizzing 以保证 Method Swizzing成功*/</font><br><strong>4、</strong> + (void)load<br>
