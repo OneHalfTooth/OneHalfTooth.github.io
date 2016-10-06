@@ -5,7 +5,7 @@
     
     <entry>
       <title><![CDATA[runtime之NSMutableArray安全]]></title>
-      <url>http://yoursite.com/2016/06/25/runtime%E4%B9%8BNSMutableArray%E5%AE%89%E5%85%A8/</url>
+      <url>http://www.masyang.com/2016/06/25/runtime%E4%B9%8BNSMutableArray%E5%AE%89%E5%85%A8/</url>
       <content type="html"><![CDATA[<p>昨天的<strong><a href="http://www.masyang.com/2016/01/22/runtime之NSArray、NSDictionary安全/" target="_blank" rel="external">博文:runtime之NSArray安全</a></strong>已经介绍了有关通过<font color="red"> Swizzing </font>使NSArray安全的操作,那么今天我们来谈一下相对繁琐的使用Swizzing让NSMutableArray安全的操作.<small>PS:文笔不行,望海涵</small></p>
    <a id="more"></a>  
 <p><strong><a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">demo地址 : https://github.com/OneHalfTooth/Runtime_Safe</a></strong></p>
@@ -152,7 +152,7 @@ method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
     
     <entry>
       <title><![CDATA[runtime之NSMutableDictionary安全]]></title>
-      <url>http://yoursite.com/2016/06/24/runtime%E4%B9%8BNSMutableDictionary%E5%AE%89%E5%85%A8/</url>
+      <url>http://www.masyang.com/2016/06/24/runtime%E4%B9%8BNSMutableDictionary%E5%AE%89%E5%85%A8/</url>
       <content type="html"><![CDATA[<p>众所周知,apple要求我们在NSMutableDictionary中不能插入nil,所以我们一旦出现这种操作就会crash,但是我们不能保证完全不会出现这种操作,除非使用大量if去做参数合法性判断</p>
 <a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSMutableDictionary * testDic = [[NSMutableDictionary alloc]init];</div><div class="line">[testDic setObject:nil forKey:@&quot;key&quot;];</div><div class="line">[testDic removeObjectForKey:nil];</div></pre></td></tr></table></figure>
@@ -210,7 +210,7 @@ method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
     
     <entry>
       <title><![CDATA[runtime之NSDictionary安全]]></title>
-      <url>http://yoursite.com/2016/06/23/runtime%E4%B9%8BNSDictionary%E5%AE%89%E5%85%A8/</url>
+      <url>http://www.masyang.com/2016/06/23/runtime%E4%B9%8BNSDictionary%E5%AE%89%E5%85%A8/</url>
       <content type="html"><![CDATA[<p>昨天已经写文章探讨<a href="http://www.masyang.com/2016/01/23/runtime之NSMutableArray安全/" target="_blank" rel="external">runtime之NSDictionary安全</a>那么今天我们就来探讨一下怎样让NSDictionary安全,使NSDictionary操作nil而不crash<br><a id="more"></a></p>
 <h2 id="要解决的问题"><a href="#要解决的问题" class="headerlink" title="要解决的问题"></a>要解决的问题</h2><p> 在NSDictionary中不管是key还是value是不能出现nil的,然而我们在做任何有关NSDictionary操作的时候我们都要考虑这个问题,参数会不会是nil,会不会引起崩溃.然后我们为了程序的健壮性,就写了一堆if,来校验参数合法性.来保证程序不会再运行的时候crash.<br> 现在我们用runtime,从根本上去预防NSDictionary插入nil崩溃这种问题<br><br> <strong>相对于NSMutableDictionary来说NSDictionary我们需要解决的问题就要少的多</strong><br><br>比如<font color="red"><strong>NSDictionary * test = @{@”crash”: nil, @”key”: @”value”};</strong></font><br><br><strong>在这只演示替换一个方法,如有更多需要请看<a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">demo:https://github.com/OneHalfTooth/Runtime_Safe</a></strong></p>
 <h2 id="要使用的方法"><a href="#要使用的方法" class="headerlink" title="要使用的方法"></a>要使用的方法</h2><font color="green"><br>//得到类的实例方法的实现 返回值为Method类型</font><br><strong>1、</strong> class_getInstanceMethod(Class cls, SEL name)<br><br><font color="green"> //得到类的类方法的实现 返回值为Method类型</font><br><strong>2、</strong> class_getClassMethod(Class cls, SEL name)<br><br><font color="green"> //交换方法m1 和方法m2的实现</font><br><strong>3、</strong> method_exchangeImplementations(Method m1, Method m2)<br><br><font color="green"> /*就像Application有生命周期回调方法一样,在Objective-C的类被加载和初始化的时候的回调方法,可以使用 Method Swizzing 以保证 Method Swizzing成功*/</font><br><strong>4、</strong> + (void)load<br>
@@ -245,7 +245,7 @@ method_exchangeImplementations(objectAtIndex, customeObjectAtIndex);
     
     <entry>
       <title><![CDATA[runtime之NSArray安全]]></title>
-      <url>http://yoursite.com/2016/06/22/runtime%E4%B9%8BNSArray%E3%80%81NSDictionary%E5%AE%89%E5%85%A8/</url>
+      <url>http://www.masyang.com/2016/06/22/runtime%E4%B9%8BNSArray%E3%80%81NSDictionary%E5%AE%89%E5%85%A8/</url>
       <content type="html"><![CDATA[<p>看了<a href="http://www.cnblogs.com/muyushifang07/p/5737564.html" target="_blank" rel="external"><strong>沐雨十方07</strong></a>的这篇博客之后，我决定将自己开发过程中用的一个小技巧分享一下,以方便各种猿的程序开发。</p>
    <a id="more"></a>  
 <p>众所周知，在apple的淫威下NSArray,NSDictionary,NSMutableArray,NSMutableDictionary是不不能出现有关nil的操作,一旦操作就会出现<strong>crash</strong>的后果,如果我们要避免这种<strong>crash</strong>那么就要增加许多if,现在我们来利用runtime彻底解决这个问题.<br><br><br><a href="https://github.com/OneHalfTooth/Runtime_Safe" target="_blank" rel="external">demo地址 : https://github.com/OneHalfTooth/Runtime_Safe</a></p>
@@ -324,7 +324,7 @@ return [self custmeObjectAtIndex:index];
     
     <entry>
       <title><![CDATA[深入ReactiveCocoa]]></title>
-      <url>http://yoursite.com/2016/05/11/%E6%B7%B1%E5%85%A5ReactiveCocoa/</url>
+      <url>http://www.masyang.com/2016/05/11/%E6%B7%B1%E5%85%A5ReactiveCocoa/</url>
       <content type="html"><![CDATA[<p><a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank" rel="external">ReactiveCocoa</a>(简称为RAC),上一篇文章，我们简单的对RAC有个初步的了解，在开发中，我们实际用到的基本都是上一篇所介绍的知识，这篇文章我们对RAC有个深入的了解。</p>
 <a id="more"></a>
 <h3 id="1-ReactiveCocoa常见操作方法介绍"><a href="#1-ReactiveCocoa常见操作方法介绍" class="headerlink" title="1.ReactiveCocoa常见操作方法介绍"></a>1.ReactiveCocoa常见操作方法介绍</h3><ul>
@@ -1108,7 +1108,7 @@ _signal = signal;
     
     <entry>
       <title><![CDATA[关于RAC的一些资料]]></title>
-      <url>http://yoursite.com/2016/04/23/%E5%85%B3%E4%BA%8ERAC%E7%9A%84%E4%B8%80%E4%BA%9B%E8%B5%84%E6%96%99/</url>
+      <url>http://www.masyang.com/2016/04/23/%E5%85%B3%E4%BA%8ERAC%E7%9A%84%E4%B8%80%E4%BA%9B%E8%B5%84%E6%96%99/</url>
       <content type="html"><![CDATA[<p>看了这么多RAC资料，在这里我整理了一下，以备学习。</p>
 <a id="more"></a>
 <h5 id="何为函数式编程"><a href="#何为函数式编程" class="headerlink" title="何为函数式编程"></a>何为函数式编程</h5><ul>
@@ -1211,7 +1211,7 @@ _signal = signal;
     
     <entry>
       <title><![CDATA[聊一聊GCD的那些事]]></title>
-      <url>http://yoursite.com/2016/04/15/%E8%81%8A%E4%B8%80%E8%81%8AGCD%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</url>
+      <url>http://www.masyang.com/2016/04/15/%E8%81%8A%E4%B8%80%E8%81%8AGCD%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</url>
       <content type="html"><![CDATA[<p>GCD是iOS开发中经常使用到的技术，最近工作比较悠闲，有时间对GCD做一个全面的学习，这篇文章将对GCD做一个全面的解析。</p>
 <a id="more"></a>
 <p><strong>目录</strong></p>
@@ -1864,7 +1864,7 @@ return instance;</code></pre>
     
     <entry>
       <title><![CDATA[聊一聊NSOperation的那些事]]></title>
-      <url>http://yoursite.com/2016/04/11/%E8%81%8A%E4%B8%80%E8%81%8ANSOperation%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</url>
+      <url>http://www.masyang.com/2016/04/11/%E8%81%8A%E4%B8%80%E8%81%8ANSOperation%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</url>
       <content type="html"><![CDATA[<p>在iOS开发中，多线程技术用到最多的就是GCD和NSOperation，上一篇文章已经对GCD有了全面的了解，这篇文章简单的聊一聊NSOperation。<br><a id="more"></a></p>
 <h3 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h3><ul>
 <li>除了，NSThread和GCD实现多线程，配合使用NSOperation和NSOperationQueue也能实现多线程编程</li>
@@ -2309,7 +2309,7 @@ JPOperation *op2 = [[JPOperation alloc] init];
     
     <entry>
       <title><![CDATA[初识ReactiveCocoa]]></title>
-      <url>http://yoursite.com/2016/03/12/%E5%88%9D%E8%AF%86ReactiveCocoa/</url>
+      <url>http://www.masyang.com/2016/03/12/%E5%88%9D%E8%AF%86ReactiveCocoa/</url>
       <content type="html"><![CDATA[<p><a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank" rel="external">ReactiveCocoa</a>(简称为RAC), 是由Github开源的一个应用于iOS和OS开发的新框架, RAC具有函数式编程和响应式编程的特性, 通过这篇文章对RAC有一个简单的了解。</p>
 <a id="more"></a>
 <h3 id="1-如何导入ReactiveCocoa框架"><a href="#1-如何导入ReactiveCocoa框架" class="headerlink" title="1.如何导入ReactiveCocoa框架"></a>1.如何导入ReactiveCocoa框架</h3><p>通常都会使用CocoaPods（用于管理第三方框架的插件）帮助我们导入。PS:<a href="http://code4app.com/article/cocoapods-install-usage" target="_blank" rel="external">CocoaPods教程</a><br><strong>注意:</strong> 2.5版本以后不支持iOS7</p>
@@ -2857,7 +2857,7 @@ RACTupleUnpack(NSString *name,NSNumber *age) = tuple;
     
     <entry>
       <title><![CDATA[iOS动画篇之UIView动画]]></title>
-      <url>http://yoursite.com/2016/03/04/iOS%E5%8A%A8%E7%94%BB%E7%AF%87-transfrom/</url>
+      <url>http://www.masyang.com/2016/03/04/iOS%E5%8A%A8%E7%94%BB%E7%AF%87-transfrom/</url>
       <content type="html"><![CDATA[<p>UIKit直接将动画集成到UIView类中，当内部的一些属性发生改变时，UIView将为这些改变提供动画支持。<br><a id="more"></a></p>
 <h4 id="UIViewAnimationOptions参考"><a href="#UIViewAnimationOptions参考" class="headerlink" title="UIViewAnimationOptions参考"></a>UIViewAnimationOptions参考</h4><pre><code>
 1.基本类型
@@ -3087,7 +3087,7 @@ CGAffineTransformTranslate(CGAffineTransform t, CGFloat tx, CGFloat ty)
     
     <entry>
       <title><![CDATA[iOS动画篇之CoreAnimation动画]]></title>
-      <url>http://yoursite.com/2016/02/27/iOS%E5%8A%A8%E7%94%BB%E7%AF%87%E4%B9%8BCoreAnimation%E5%8A%A8%E7%94%BB/</url>
+      <url>http://www.masyang.com/2016/02/27/iOS%E5%8A%A8%E7%94%BB%E7%AF%87%E4%B9%8BCoreAnimation%E5%8A%A8%E7%94%BB/</url>
       <content type="html"><![CDATA[<p>App如果想被大众喜欢，漂亮的UI和精美的动画都是必不可少的，苹果虽然为UIView提供了一些常用动画，但是大部分看起来比较不错的效果都是通过操作Layer层实现的，因此了解核心动画是必要的.CoreAnimation是直接作用在CALayer上的(并非UIView上)非常强大的跨Mac OS X和iOS平台的动画处理API，Core Animation的动画执行过程都是在后台操作的，不会阻塞主线程。<br><a id="more"></a></p>
 <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>开发中用的最多的是<code>CoreAnimation</code>动画库，简称是CA，所以动画类都是CA开头。所有的动画类都在<code>QuartzCore</code>库中，在iOS7之前使用需要<code>#import &lt;QuartzCore/QuartzCore.h&gt;</code>,iOS7之后系统已经将其自动导入了。<code>CoreAnimation</code>动画都是作用在<code>layer</code>上。<br>先来看下动画类的层级关系：</p>
 <div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_12.png?raw=true" alt="动画层级结构"><br></div><br>关于上图中的层级结构只需要了解一下，用的多了，自然就记住了。本篇只讲述<code>CABasicAnimation</code>、<code>CAKeyframeAnimation</code>、<code>CAAnimationGroup</code>的使用。<br><br>### 使用<br>上面讲了CA动画都是作用在Layer上，而CA动画中修改的也是Layer的动画属性，可以产生动画的layer属性也有<code>Animatable</code>标识。<br>#### 1.CABasicAnimation<br><code>CABasicAnimation</code>动画主要是设置某个动画属性的初始值fromValue和结束值toValue，来产生动画效果。<br>先上个示例代码，将一个视图往上移动一段距离：<br><div align="center"><br><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/Animation/Animation_13.gif?raw=true" alt="animation"><br></div>
@@ -3494,7 +3494,7 @@ animation.timingFunction = UIViewAnimationOptionCurveEaseInOut;
     
     <entry>
       <title><![CDATA[iOS动画之CATransition动画]]></title>
-      <url>http://yoursite.com/2016/02/08/iOS%E5%8A%A8%E7%94%BB%E4%B9%8BCATransition%E5%8A%A8%E7%94%BB/</url>
+      <url>http://www.masyang.com/2016/02/08/iOS%E5%8A%A8%E7%94%BB%E4%B9%8BCATransition%E5%8A%A8%E7%94%BB/</url>
       <content type="html"><![CDATA[<p>今天主要用到的动画类是CALayer下的CATransition至于各种动画类中如何继承的在这也不做赘述，网上的资料是一抓一大把。好废话少说切入今天的正题。</p>
 <a id="more"></a>
 <h3 id="一-封装动画方法"><a href="#一-封装动画方法" class="headerlink" title="一.封装动画方法"></a>一.封装动画方法</h3><h5 id="1-用CATransition实现动画的封装方法如下，每句代码是何意思，请看注释之。"><a href="#1-用CATransition实现动画的封装方法如下，每句代码是何意思，请看注释之。" class="headerlink" title="1.用CATransition实现动画的封装方法如下，每句代码是何意思，请看注释之。"></a>1.用CATransition实现动画的封装方法如下，每句代码是何意思，请看注释之。</h5><pre><code>
@@ -3783,7 +3783,7 @@ case CurlDown:
     
     <entry>
       <title><![CDATA[RunLoop总结]]></title>
-      <url>http://yoursite.com/2016/02/01/RunLoop%E6%80%BB%E7%BB%93/</url>
+      <url>http://www.masyang.com/2016/02/01/RunLoop%E6%80%BB%E7%BB%93/</url>
       <content type="html"><![CDATA[<p>最近研究了一下RunLoop，在这里对RunLoop做一个总结，主要是对<code>&lt;CoreFoundation/CFRunLoop.h&gt;</code>的头文件函数总结。</p>
 <a id="more"></a>
 <h3 id="关于RunLoop的资料总结"><a href="#关于RunLoop的资料总结" class="headerlink" title="关于RunLoop的资料总结"></a>关于RunLoop的资料总结</h3><p>网上关于RunLoop的总结大致相同，这里推荐几篇好的文章共大家学习。</p>
@@ -4014,7 +4014,7 @@ CF_IMPLICIT_BRIDGING_DISABLED
     
     <entry>
       <title><![CDATA[ReactiveCocoa和RXSwift速查表]]></title>
-      <url>http://yoursite.com/2016/01/24/ReactiveCocoa%E5%92%8CRXSwift%E9%80%9F%E6%9F%A5%E8%A1%A8/</url>
+      <url>http://www.masyang.com/2016/01/24/ReactiveCocoa%E5%92%8CRXSwift%E9%80%9F%E6%9F%A5%E8%A1%A8/</url>
       <content type="html"><![CDATA[<p>在接触了RAC以后,对RAC有了一个基本的了解，这里整理了一下RAC脑图，方便日后查看。ps(<a href="https://github.com/aiqiuqiu/FRPCheatSheeta" target="_blank" rel="external">转载</a>)</p>
 <a id="more"></a>
 <h3 id="ReactiveCocoa-Objective-C部分"><a href="#ReactiveCocoa-Objective-C部分" class="headerlink" title="ReactiveCocoa-Objective-C部分"></a>ReactiveCocoa-Objective-C部分</h3><p><img src="https://github.com/guiyongdong/Resource/blob/master/hexoImage/ReactiveCocoa-Objective-C.png?raw=true" alt="ReactiveCocoa-Objective-C Swartz"></p>
@@ -4026,7 +4026,7 @@ CF_IMPLICIT_BRIDGING_DISABLED
     
     <entry>
       <title><![CDATA[UIBezierPath详解]]></title>
-      <url>http://yoursite.com/2016/01/22/UIBezierPath%E8%AF%A6%E8%A7%A3/</url>
+      <url>http://www.masyang.com/2016/01/22/UIBezierPath%E8%AF%A6%E8%A7%A3/</url>
       <content type="html"><![CDATA[<p>我在写本篇文章之前，也没有系统学习过贝塞尔曲线，只是曾经某一次的需求需要使用到，才临时百度看了一看而且使用最基本的功能。现在总算有时间停下来好好研究研究这个神奇而伟大的贝塞尔先生！</p>
 <a id="more"></a>
 <h4 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h4><hr>
