@@ -1,207 +1,297 @@
-<?xml version="1.0" encoding="utf-8"?>
-<urlset>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
   <url>
-    <loc>http://www.masyang.com/html/personalprofile/html/personalprofile.html</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/03/12/%E5%88%9D%E8%AF%86ReactiveCocoa/</loc>
+    <lastmod>2016-09-28T02:33:46.000Z</lastmod>
+    <data>
+        <display>
+        <title>初识ReactiveCocoa</title>
+        <pubTime>2016-03-12T09:44:58.000Z</pubTime>
+        
+        <tag>ReactiveCocoa</tag>
+         
+         
+           
+             
+              <breadCrumb title="ReactiveCocoa" url="http://www.masyang.com/categories/ReactiveCocoa/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/05/11/%E6%B7%B1%E5%85%A5ReactiveCocoa/</loc>
+    <lastmod>2016-09-28T02:33:38.000Z</lastmod>
+    <data>
+        <display>
+        <title>深入ReactiveCocoa</title>
+        <pubTime>2016-05-11T09:37:47.000Z</pubTime>
+        
+        <tag>ReactiveCocoa</tag>
+         
+         
+           
+             
+              <breadCrumb title="ReactiveCocoa" url="http://www.masyang.com/categories/ReactiveCocoa/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/2016/06/25/runtime之nsmutablearray安全/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/06/22/runtime%E4%B9%8BNSArray%E3%80%81NSDictionary%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2016-09-28T02:30:23.000Z</lastmod>
+    <data>
+        <display>
+        <title>runtime之NSArray安全</title>
+        <pubTime>2016-06-22T02:48:14.000Z</pubTime>
+        
+        <tag>字典,数组,崩溃,安全,运行时,runtime,nil,崩溃,crash</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>http://www.masyang.com/2016/01/22/runtime之nsarray、nsdictionary安全/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/06/23/runtime%E4%B9%8BNSDictionary%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2016-09-28T02:30:17.000Z</lastmod>
+    <data>
+        <display>
+        <title>runtime之NSDictionary安全</title>
+        <pubTime>2016-06-23T07:09:10.000Z</pubTime>
+        
+        <tag>字典,数组,崩溃,安全,运行时,runtime,nil,崩溃,crash</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/2016/06/25/runtime之nsmutablearray安全/#more</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/06/25/runtime%E4%B9%8BNSMutableArray%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2016-09-28T02:30:08.000Z</lastmod>
+    <data>
+        <display>
+        <title>runtime之NSMutableArray安全</title>
+        <pubTime>2016-06-25T03:23:31.000Z</pubTime>
+        
+        <tag>字典,数组,崩溃,安全,运行时,runtime,nil,崩溃,crash</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/tags/字典-数组-崩溃-安全-运行时-runtime-nil-崩溃-crash/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/06/24/runtime%E4%B9%8BNSMutableDictionary%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2016-09-28T02:30:01.000Z</lastmod>
+    <data>
+        <display>
+        <title>runtime之NSMutableDictionary安全</title>
+        <pubTime>2016-06-24T09:02:10.000Z</pubTime>
+        
+        <tag>字典,数组,崩溃,安全,运行时,runtime,nil,崩溃,crash</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/2016/06/24/runtime之nsmutabledictionary安全/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/04/23/%E5%85%B3%E4%BA%8ERAC%E7%9A%84%E4%B8%80%E4%BA%9B%E8%B5%84%E6%96%99/</loc>
+    <lastmod>2016-09-28T02:29:42.000Z</lastmod>
+    <data>
+        <display>
+        <title>关于RAC的一些资料</title>
+        <pubTime>2016-04-23T06:47:26.000Z</pubTime>
+        
+        <tag>ReactiveCocoa</tag>
+         
+         
+           
+             
+              <breadCrumb title="ReactiveCocoa" url="http://www.masyang.com/categories/ReactiveCocoa/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/2016/06/24/runtime之nsmutabledictionary安全/#more</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/04/15/%E8%81%8A%E4%B8%80%E8%81%8AGCD%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</loc>
+    <lastmod>2016-09-28T02:29:30.000Z</lastmod>
+    <data>
+        <display>
+        <title>聊一聊GCD的那些事</title>
+        <pubTime>2016-04-15T08:56:07.000Z</pubTime>
+        
+        <tag>GCD</tag>
+         
+         
+           
+             
+              <breadCrumb title="GCD" url="http://www.masyang.com/categories/GCD/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/2016/06/23/runtime之nsdictionary安全/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/04/11/%E8%81%8A%E4%B8%80%E8%81%8ANSOperation%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</loc>
+    <lastmod>2016-09-28T02:29:19.000Z</lastmod>
+    <data>
+        <display>
+        <title>聊一聊NSOperation的那些事</title>
+        <pubTime>2016-04-11T08:23:05.000Z</pubTime>
+        
+        <tag>NSOperation</tag>
+         
+         
+           
+             
+              <breadCrumb title="NSOperation" url="http://www.masyang.com/categories/NSOperation/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>http://www.masyang.com/2016/01/23/runtime之nsmutablearray安全/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/03/04/iOS%E5%8A%A8%E7%94%BB%E7%AF%87-transfrom/</loc>
+    <lastmod>2016-09-28T02:29:06.000Z</lastmod>
+    <data>
+        <display>
+        <title>iOS动画篇之UIView动画</title>
+        <pubTime>2016-03-04T03:38:37.000Z</pubTime>
+        
+        <tag>动画</tag>
+         
+         
+           
+             
+              <breadCrumb title="动画" url="http://www.masyang.com/categories/%E5%8A%A8%E7%94%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/2016/06/23/runtime之nsdictionary安全/#more</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/02/27/iOS%E5%8A%A8%E7%94%BB%E7%AF%87%E4%B9%8BCoreAnimation%E5%8A%A8%E7%94%BB/</loc>
+    <lastmod>2016-09-28T02:28:59.000Z</lastmod>
+    <data>
+        <display>
+        <title>iOS动画篇之CoreAnimation动画</title>
+        <pubTime>2016-02-27T06:08:56.000Z</pubTime>
+        
+        <tag>动画</tag>
+         
+         
+           
+             
+              <breadCrumb title="动画" url="http://www.masyang.com/categories/%E5%8A%A8%E7%94%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/2016/06/22/runtime之nsarray、nsdictionary安全/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/02/08/iOS%E5%8A%A8%E7%94%BB%E4%B9%8BCATransition%E5%8A%A8%E7%94%BB/</loc>
+    <lastmod>2016-09-28T02:28:50.000Z</lastmod>
+    <data>
+        <display>
+        <title>iOS动画之CATransition动画</title>
+        <pubTime>2016-02-08T07:35:15.000Z</pubTime>
+        
+        <tag>动画</tag>
+         
+         
+           
+             
+              <breadCrumb title="动画" url="http://www.masyang.com/categories/%E5%8A%A8%E7%94%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/2016/06/22/runtime之nsarray、nsdictionary安全/#more</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/02/01/RunLoop%E6%80%BB%E7%BB%93/</loc>
+    <lastmod>2016-09-28T02:28:42.000Z</lastmod>
+    <data>
+        <display>
+        <title>RunLoop总结</title>
+        <pubTime>2016-02-01T09:05:52.000Z</pubTime>
+        
+        <tag>RunLoop</tag>
+         
+         
+           
+             
+              <breadCrumb title="RunLoop" url="http://www.masyang.com/categories/RunLoop/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/2016/05/11/深入reactivecocoa/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/01/22/UIBezierPath%E8%AF%A6%E8%A7%A3/</loc>
+    <lastmod>2016-09-28T02:28:35.000Z</lastmod>
+    <data>
+        <display>
+        <title>UIBezierPath详解</title>
+        <pubTime>2016-01-22T07:51:31.000Z</pubTime>
+        
+        <tag>UIBezierPath</tag>
+         
+         
+           
+             
+              <breadCrumb title="动画" url="http://www.masyang.com/categories/%E5%8A%A8%E7%94%BB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
   <url>
-    <loc>/2016/05/11/深入reactivecocoa/#more</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/tags/reactivecocoa/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/categories/reactivecocoa/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/2016/04/23/关于rac的一些资料/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/2016/04/23/关于rac的一些资料/#more</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/2016/04/15/聊一聊gcd的那些事/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/2016/04/15/聊一聊gcd的那些事/#more</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/tags/gcd/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/categories/gcd/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/2016/04/11/聊一聊nsoperation的那些事/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/2016/04/11/聊一聊nsoperation的那些事/#more</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/tags/nsoperation/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/categories/nsoperation/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/2016/03/12/初识reactivecocoa/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/2016/03/12/初识reactivecocoa/#more</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/2016/03/04/ios动画篇-transfrom/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/2016/03/04/ios动画篇-transfrom/#more</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/tags/动画/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/categories/动画/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>/page/2/</loc>
-    <lastmod>2016-10-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <loc>http://www.masyang.com/2016/01/24/ReactiveCocoa%E5%92%8CRXSwift%E9%80%9F%E6%9F%A5%E8%A1%A8/</loc>
+    <lastmod>2016-09-28T02:28:34.000Z</lastmod>
+    <data>
+        <display>
+        <title>ReactiveCocoa和RXSwift速查表</title>
+        <pubTime>2016-01-24T01:55:48.000Z</pubTime>
+        
+        <tag>ReactiveCocoa</tag>
+         
+         
+           
+             
+              <breadCrumb title="ReactiveCocoa" url="http://www.masyang.com/categories/ReactiveCocoa/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+    
+    
 </urlset>
