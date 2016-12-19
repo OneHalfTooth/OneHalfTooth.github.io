@@ -2,16 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.masyang.com/html/myPalm/Source/main.js</loc>
+    <loc>http://www.masyang.com/html/Marry/marry.js</loc>
     
-    <lastmod>2016-12-15T02:12:38.000Z</lastmod>
+    <lastmod>2016-12-19T05:41:33.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.masyang.com/html/Marry/marry.html</loc>
+    
+    <lastmod>2016-12-19T05:31:26.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.masyang.com/html/Marry/marry.css</loc>
+    
+    <lastmod>2016-12-19T05:31:07.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.masyang.com/html/myPalm/html/myPalm.html</loc>
     
-    <lastmod>2016-11-15T06:34:58.000Z</lastmod>
+    <lastmod>2016-12-16T03:37:44.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.masyang.com/html/jQuery/jQuery.js</loc>
+    
+    <lastmod>2016-12-16T03:10:32.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.masyang.com/html/myPalm/Source/main.js</loc>
+    
+    <lastmod>2016-12-15T02:12:38.000Z</lastmod>
     
   </url>
   
